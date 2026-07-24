@@ -1,0 +1,41 @@
+import type { ErrorRequestHandler } from "express";
+
+import { ZodError } from "zod";
+
+import {
+  AppError,
+  InternalServerError,
+  ValidationError,
+} from "@/errors/app-error";
+
+export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
+  console.error("[ErrorHandler]", err);
+
+  if (err instanceof AppError) {
+    res.status(err.status).json({
+      message: err.message,
+      code: err.code,
+      details: err.details,
+    });
+    return;
+  }
+
+  if (err instanceof ZodError) {
+    const errors = err.issues.map((e) => e.message);
+    const ve = new ValidationError(errors);
+
+    res.status(ve.status).json({
+      message: ve.message,
+      code: ve.code,
+      errors,
+    });
+    return;
+  }
+
+  const internal = new InternalServerError();
+
+  res.status(internal.status).json({
+    message: internal.message,
+    code: internal.code,
+  });
+};
