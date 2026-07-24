@@ -9,5 +9,14 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "workspaces": [
+    "backend",
+    "frontend",
+    "packages/*"
+  ],
+  "allowScripts": {
+    "prisma": true,
+    "@prisma/engines": true
+  }
 }
