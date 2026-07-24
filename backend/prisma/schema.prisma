@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum AppRole {
+  ADMIN
+  MANAGER
+  SUPERVISOR
+}
+
+model AppUser {
+  id           Int      @id @default(autoincrement())
+  name         String
+  surname      String
+  username     String   @unique
+  passwordHash String
+  role         AppRole  @default(SUPERVISOR)
+  isActive     Boolean  @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ParkingUser {
+  id            Int                  @id @default(autoincrement())
+  name          String
+  surname       String
+  telephone     String               @unique
+  accessAllowed Boolean              @default(false)
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  vehicles      ParkingUserVehicle[] @relation("ParkingUserVehicles")
+  records       Record[]
+  timeshifts    Timeshift[]
+}
+
+model Vehicle {
+  id        Int                  @id @default(autoincrement())
+  plate     String               @unique
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+  users     ParkingUserVehicle[] @relation("ParkingUserVehicles")
+  Record    Record[]
+}
+
+model ParkingUserVehicle {
+  parkingUserId Int
+  vehicleId     Int
+  parkingUser   ParkingUser @relation("ParkingUserVehicles", fields: [parkingUserId], references: [id], onDelete: Cascade)
+  vehicle       Vehicle     @relation("ParkingUserVehicles", fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@id([parkingUserId, vehicleId])
+}
+
+model Timeshift {
+  id            Int         @id @default(autoincrement())
+  dayOfWeek     Int
+  startTime     String?
+  endTime       String?
+  allDay        Boolean     @default(false)
+  parkingUserId Int
+  parkingUser   ParkingUser @relation(fields: [parkingUserId], references: [id], onDelete: Cascade)
+}
+
+model Record {
+  id                 Int          @id @default(autoincrement())
+  vehicleId          Int?
+  time               DateTime     @default(now())
+  success            Boolean      @default(false)
+  reasonForDenial    String?
+  vehiclePlate       String?
+  parkingUserId      Int?
+  parkingUserName    String       @default("Desconocido")
+  parkingUserSurname String?
+  parkingUser        ParkingUser? @relation(fields: [parkingUserId], references: [id])
+  vehicle            Vehicle?     @relation(fields: [vehicleId], references: [id])
+}
