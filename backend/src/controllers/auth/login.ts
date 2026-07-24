@@ -1,9 +1,7 @@
-import type { Request, Response } from "express";
-
-import { randomUUID } from "crypto";
-
 import { LoginBodySchema } from "@parking-access/schemas";
 import bcrypt from "bcryptjs";
+import { randomUUID } from "crypto";
+import type { Request, Response } from "express";
 
 import {
   ACCESS_TOKEN_TTL_MS,

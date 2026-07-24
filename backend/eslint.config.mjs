@@ -1,6 +1,6 @@
-import _import from "eslint-plugin-import";
-import eslintPluginPrettier from "eslint-plugin-prettier/recommended";
 import { defineConfig, globalIgnores } from "eslint/config";
+import eslintPluginPrettier from "eslint-plugin-prettier/recommended";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
@@ -14,7 +14,7 @@ export default defineConfig([
   eslintPluginPrettier,
   {
     plugins: {
-      import: _import,
+      "simple-import-sort": simpleImportSort,
     },
     rules: {
       "@typescript-eslint/no-unused-vars": [
@@ -22,33 +22,8 @@ export default defineConfig([
         { argsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" },
       ],
       "capitalized-comments": ["warn", "always"],
-      "import/order": [
-        "warn",
-        {
-          groups: [
-            "type",
-            "builtin",
-            "object",
-            "external",
-            "internal",
-            "parent",
-            "sibling",
-            "index",
-          ],
-          pathGroups: [
-            {
-              pattern: "@/**",
-              group: "internal",
-              position: "after",
-            },
-          ],
-          alphabetize: {
-            order: "asc",
-            caseInsensitive: true,
-          },
-          "newlines-between": "always",
-        },
-      ],
+      "simple-import-sort/imports": "warn",
+      "simple-import-sort/exports": "warn",
     },
   },
 ]);
