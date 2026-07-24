@@ -3,7 +3,8 @@
   "compilerOptions": {
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "nodenext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "target": "esnext",
     // For nodejs:
     // "lib": ["esnext"],
