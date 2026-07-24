@@ -6,8 +6,8 @@ COPY package*.json ./
 COPY frontend/package*.json ./frontend/
 COPY packages/schemas/package*.json ./packages/schemas/
 
-RUN npm install
+RUN npm install --include=optional
 
 WORKDIR /app/frontend
 
-CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "npm install --include=optional && npm run dev"]

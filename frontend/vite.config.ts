@@ -8,4 +8,9 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   plugins: [react(), tailwindcss()],
+  server: {
+    proxy: {
+      "/api": "http://backend:4000",
+    },
+  },
 });

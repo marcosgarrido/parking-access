@@ -10,4 +10,4 @@ RUN npm install
 
 WORKDIR /app/backend
 
-CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "npm install && npm run dev"]
