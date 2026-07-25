@@ -1,14 +1,9 @@
-import { Button } from "@heroui/react";
+import { Button, useTheme } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useState } from "react";
 
 export function ThemeSwitch() {
-  const [isDark, setIsDark] = useState(false);
-
-  const toggleTheme = () => {
-    document.documentElement.classList.toggle("dark");
-    setIsDark((prev) => !prev);
-  };
+  const { resolvedTheme, setTheme } = useTheme("system");
+  const isDark = resolvedTheme === "dark";
 
   return (
     <Button
@@ -16,7 +11,7 @@ export function ThemeSwitch() {
       aria-label={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
       size="md"
       variant="outline"
-      onPress={toggleTheme}
+      onPress={() => setTheme(isDark ? "light" : "dark")}
     >
       <Icon className="size-4" icon={isDark ? "lucide:moon" : "lucide:sun"} />
     </Button>
