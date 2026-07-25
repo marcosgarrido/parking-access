@@ -18,3 +18,5 @@ backend/prisma/generated/
 logs/
 
 .DS_Store
+
+.vscode/
