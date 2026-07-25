@@ -1,6 +1,7 @@
 import type { ErrorRequestHandler } from "express";
 import { ZodError } from "zod";
 
+import { Prisma } from "@/database";
 import {
   AppError,
   InternalServerError,
@@ -27,6 +28,30 @@ export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
       message: ve.message,
       code: ve.code,
       errors,
+    });
+    return;
+  }
+
+  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    if (err.code === "P2025") {
+      res.status(404).json({
+        message: "Recurso no encontrado",
+        code: "NOT_FOUND",
+        details: err.meta,
+      });
+      return;
+    }
+    if (err.code === "P2002") {
+      res.status(409).json({
+        message: "Valor duplicado",
+        code: "UNIQUE_CONSTRAINT",
+        details: err.meta,
+      });
+      return;
+    }
+    res.status(400).json({
+      message: "Error de base de datos",
+      code: "DATABASE_ERROR",
     });
     return;
   }
