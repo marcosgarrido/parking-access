@@ -17,4 +17,17 @@ body {
   .surface {
     @apply rounded-3xl shadow-surface;
   }
+
+  .table__row,
+  .table__cell {
+    @apply border-b-0;
+  }
+
+  .table-root {
+    @apply border border-separator/50 shadow-surface;
+  }
+
+  .pagination__link[data-active="true"] {
+    @apply bg-accent text-accent-foreground hover:bg-accent-hover;
+  }
 }
