@@ -1,0 +1,9 @@
+{
+  "eslint.workingDirectories": [
+    { "directory": "backend" },
+    { "directory": "frontend" },
+    { "directory": "packages/schemas" }
+  ],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+}

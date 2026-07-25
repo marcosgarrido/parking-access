@@ -10,7 +10,7 @@ export const UsernameSchema = z
   .max(32, "El nombre de usuario no puede exceder 32 caracteres")
   .regex(
     /^[a-zA-Z0-9._-]+$/,
-    "Solo letras, números, puntos, guiones y guiones bajos"
+    "Solo letras, números, puntos, guiones y guiones bajos",
   );
 
 export const LoginBodySchema = z.object({
@@ -29,6 +29,21 @@ export const AccessTokenPayloadSchema = AccessTokenClaimsSchema.extend({
   exp: z.number().int(),
 });
 
+export const AppUserSessionSchema = z.object({
+  id: IdSchema,
+  username: UsernameSchema,
+  role: RoleSchema,
+  name: z.string().nullable().optional(),
+  surname: z.string().nullable().optional(),
+});
+
+export const LoginResponseSchema = z.object({
+  user: AppUserSessionSchema,
+  sessionExpiresAt: z.number().int(),
+});
+
 export type LoginBody = z.infer<typeof LoginBodySchema>;
 export type AccessTokenClaims = z.infer<typeof AccessTokenClaimsSchema>;
 export type AccessTokenPayload = z.infer<typeof AccessTokenPayloadSchema>;
+export type AppUserSession = z.infer<typeof AppUserSessionSchema>;
+export type LoginResponse = z.infer<typeof LoginResponseSchema>;

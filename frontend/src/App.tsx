@@ -1,10 +1,31 @@
-import { Button } from "@heroui/react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+
+import { AppProvider } from "@/app-provider";
+import HomePage from "@/pages/home";
+import LoginPage from "@/pages/login";
+import { queryClient } from "@/query-client";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <AppProvider>
+        <Outlet />
+      </AppProvider>
+    ),
+    children: [
+      { path: "login", element: <LoginPage /> },
+      { index: true, element: <HomePage /> },
+    ],
+  },
+]);
 
 function App() {
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <Button color="primary">Hola HeroUI</Button>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   );
 }
 

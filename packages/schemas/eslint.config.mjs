@@ -1,11 +1,10 @@
-import { defineConfig, globalIgnores } from "eslint/config";
+import { defineConfig } from "eslint/config";
 import eslintPluginPrettier from "eslint-plugin-prettier/recommended";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default defineConfig([
-  globalIgnores(["dist/**/*", "prisma/generated/**/*"]),
   {
     files: ["**/*.{js,mjs,cjs,ts}"],
     languageOptions: {
@@ -24,7 +23,6 @@ export default defineConfig([
         "warn",
         { argsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" },
       ],
-      "capitalized-comments": ["warn", "always"],
       "simple-import-sort/imports": "warn",
       "simple-import-sort/exports": "warn",
     },

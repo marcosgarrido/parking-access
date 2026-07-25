@@ -2,3 +2,19 @@
 @import "@heroui/styles";
 
 @custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-orbitron: "Orbitron", sans-serif;
+  --font-rubik: "Rubik", sans-serif;
+}
+
+body {
+  @apply bg-background text-foreground;
+  font-family: var(--font-rubik);
+}
+
+@layer components {
+  .surface {
+    @apply rounded-3xl shadow-surface;
+  }
+}

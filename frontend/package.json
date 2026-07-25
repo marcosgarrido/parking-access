@@ -12,6 +12,8 @@
   "dependencies": {
     "@heroui/react": "^3.2.2",
     "@heroui/styles": "^3.2.2",
+    "@iconify/react": "^6.0.2",
+    "@parking-access/schemas": "*",
     "@tanstack/react-query": "^5.101.4",
     "clsx": "^2.1.1",
     "react": "^19.2.7",
