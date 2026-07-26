@@ -1,3 +1,5 @@
+import DeleteAppUserModal from "@/modals/delete-app-user-modal";
+
 export default function DeleteAppUserPage() {
-  return <p>Confirmación de borrar usuario del sistema (dummy)</p>;
+  return <DeleteAppUserModal />;
 }
