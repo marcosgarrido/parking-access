@@ -64,7 +64,7 @@ export default function ParkingUsersTable({
     sortDescriptor.column === column ? sortDescriptor.direction : undefined;
 
   return (
-    <div className="flex flex-col gap-4 w-full max-w-5xl">
+    <div className="flex flex-col gap-4 w-full max-w-6xl">
       <div className="flex justify-between items-center w-full">
         <div className="flex gap-2">
           <SearchField value={search} onChange={onSearchChange}>
@@ -171,7 +171,7 @@ export default function ParkingUsersTable({
                   Fecha de creación
                 </Table.SortableColumnHeader>
               </Table.Column>
-              <Table.Column>Acciones</Table.Column>
+              <Table.Column className="text-center">Acciones</Table.Column>
             </Table.Header>
             <Table.Body>
               {users.map((user) => (
@@ -226,11 +226,12 @@ export default function ParkingUsersTable({
                       hour12: false,
                     })}
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell className="relative">
                     <Dropdown>
                       <Button
                         isIconOnly
                         aria-label="Acciones"
+                        className="absolute inset-0 m-auto"
                         size="sm"
                         variant="ghost"
                       >

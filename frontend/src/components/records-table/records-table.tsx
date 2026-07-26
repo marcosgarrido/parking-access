@@ -66,7 +66,7 @@ export default function RecordsTable({
     sortDescriptor.column === column ? sortDescriptor.direction : undefined;
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col gap-4 w-full max-w-6xl">
       <div className="flex justify-between items-center w-full">
         <div className="flex gap-2">
           <SearchField value={search} onChange={onSearchChange}>
