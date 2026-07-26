@@ -10,4 +10,4 @@ RUN npm install
 
 WORKDIR /app/backend
 
-CMD ["sh", "-c", "npm install && npm run dev"]
+CMD ["sh", "-c", "npm install && npx prisma migrate deploy && npm run seed:bootstrap-admin && npm run dev"]

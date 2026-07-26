@@ -5,13 +5,16 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "lint": "eslint 'src/**/*.ts'"
+    "lint": "eslint 'src/**/*.ts'",
+    "seed:bootstrap-admin": "tsx src/database/bootstrap-admin.ts",
+    "seed:fake-data": "tsx src/database/seed-fake-data.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@faker-js/faker": "^9.9.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
