@@ -1,3 +1,4 @@
+import type { Id } from "@parking-access/schemas";
 import {
   type RecordListResponse,
   RecordListResponseSchema,
@@ -36,3 +37,10 @@ export const recordsQuery = (params: Params) =>
     queryKey: ["records", params],
     queryFn: () => fetchRecords(params),
   });
+
+export async function deleteRecords(ids: Id[]): Promise<void> {
+  await apiFetch("/api/records/delete-many", {
+    method: "POST",
+    body: JSON.stringify({ ids }),
+  });
+}

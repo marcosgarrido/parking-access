@@ -1,3 +1,5 @@
+import DeleteRecordsModal from "@/modals/delete-records-modal";
+
 export default function DeleteRecordsPage() {
-  return <p>Confirmación de borrar registros del historial (dummy)</p>;
+  return <DeleteRecordsModal />;
 }
