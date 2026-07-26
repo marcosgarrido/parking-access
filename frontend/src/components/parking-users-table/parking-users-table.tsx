@@ -150,7 +150,13 @@ export default function ParkingUsersTable({
                 </Table.SortableColumnHeader>
               </Table.Column>
               <Table.Column>Teléfono</Table.Column>
-              <Table.Column>Estado</Table.Column>
+              <Table.Column allowsSorting id="accessAllowed">
+                <Table.SortableColumnHeader
+                  sortDirection={sortDirectionFor("accessAllowed")}
+                >
+                  Estado
+                </Table.SortableColumnHeader>
+              </Table.Column>
               <Table.Column allowsSorting id="lastAccess">
                 <Table.SortableColumnHeader
                   sortDirection={sortDirectionFor("lastAccess")}
