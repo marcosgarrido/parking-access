@@ -1,3 +1,4 @@
+export * from "./app-user-schema";
 export * from "./auth-schema";
 export * from "./id-schema";
 export * from "./parking-user-schema";

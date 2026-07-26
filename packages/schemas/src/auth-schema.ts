@@ -13,6 +13,14 @@ export const UsernameSchema = z
     "Solo letras, números, puntos, guiones y guiones bajos",
   );
 
+export const PasswordPolicySchema = z
+  .string()
+  .min(8, "La longitud mínima debe de ser al menos de 8 caracteres")
+  .regex(/[A-Z]/, "Incluya al menos una mayúscula")
+  .regex(/[a-z]/, "Incluya al menos una minúscula")
+  .regex(/\d/, "Incluya al menos un número")
+  .regex(/[^A-Za-z0-9]/, "Incluya al menos un símbolo");
+
 export const LoginBodySchema = z.object({
   username: z.string().min(1, "El usuario es requerido"),
   password: z.string().min(1, "La contraseña es requerida"),
