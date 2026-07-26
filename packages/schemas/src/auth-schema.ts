@@ -41,8 +41,8 @@ export const AppUserSessionSchema = z.object({
   id: IdSchema,
   username: UsernameSchema,
   role: RoleSchema,
-  name: z.string().nullable().optional(),
-  surname: z.string().nullable().optional(),
+  name: z.string(),
+  surname: z.string(),
 });
 
 export const LoginResponseSchema = z.object({
