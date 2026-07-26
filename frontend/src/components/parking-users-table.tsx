@@ -2,7 +2,6 @@ import type { Key, Selection, SortDescriptor } from "@heroui/react";
 import {
   Button,
   Checkbox,
-  Chip,
   Dropdown,
   Label,
   ListBox,
@@ -11,10 +10,10 @@ import {
   Table,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import type { AppUserResponse } from "@parking-access/schemas";
+import type { ParkingUserResponse } from "@parking-access/schemas";
 
+import StatusIndicator from "@/components/status-indicator";
 import TablePagination from "@/components/table-pagination/table-pagination";
-import { ROLE_CHIP_CLASS, ROLE_LABELS } from "@/constants/roles";
 
 const PAGE_SIZE_OPTIONS = [
   { key: "5", label: "5" },
@@ -23,8 +22,8 @@ const PAGE_SIZE_OPTIONS = [
   { key: "0", label: "Todas" },
 ];
 
-type AppUsersTableProps = {
-  users: AppUserResponse[];
+type ParkingUsersTableProps = {
+  users: ParkingUserResponse[];
   totalUsers: number;
   page: number;
   pageSize: number;
@@ -41,7 +40,7 @@ type AppUsersTableProps = {
   onDeleteSelection: () => void;
 };
 
-export default function AppUsersTable({
+export default function ParkingUsersTable({
   users,
   totalUsers,
   page,
@@ -57,7 +56,7 @@ export default function AppUsersTable({
   onSelectionChange,
   onCreate,
   onDeleteSelection,
-}: AppUsersTableProps) {
+}: ParkingUsersTableProps) {
   const hasSelection =
     selectedKeys === "all" ||
     (selectedKeys instanceof Set && selectedKeys.size > 0);
@@ -74,7 +73,7 @@ export default function AppUsersTable({
               <SearchField.SearchIcon />
               <SearchField.Input
                 className="w-64"
-                placeholder="Buscar por nombre de usuario"
+                placeholder="Buscar por nombre o apellidos"
               />
               <SearchField.ClearButton />
             </SearchField.Group>
@@ -127,7 +126,7 @@ export default function AppUsersTable({
       <Table>
         <Table.ScrollContainer>
           <Table.Content
-            aria-label="Usuarios del sistema"
+            aria-label="Usuarios del parking"
             selectedKeys={selectedKeys}
             selectionMode="multiple"
             sortDescriptor={sortDescriptor}
@@ -148,27 +147,13 @@ export default function AppUsersTable({
                 <Table.SortableColumnHeader
                   sortDirection={sortDirectionFor("name")}
                 >
-                  NOMBRE COMPLETO
+                  NOMBRE
                 </Table.SortableColumnHeader>
               </Table.Column>
-              <Table.Column allowsSorting id="username">
+              <Table.Column className="text-center">TELÉFONO</Table.Column>
+              <Table.Column allowsSorting id="accessAllowed">
                 <Table.SortableColumnHeader
-                  sortDirection={sortDirectionFor("username")}
-                >
-                  USUARIO
-                </Table.SortableColumnHeader>
-              </Table.Column>
-              <Table.Column allowsSorting className="text-center" id="role">
-                <Table.SortableColumnHeader
-                  className="justify-center"
-                  sortDirection={sortDirectionFor("role")}
-                >
-                  ROL
-                </Table.SortableColumnHeader>
-              </Table.Column>
-              <Table.Column allowsSorting id="isActive">
-                <Table.SortableColumnHeader
-                  sortDirection={sortDirectionFor("isActive")}
+                  sortDirection={sortDirectionFor("accessAllowed")}
                 >
                   ESTADO
                 </Table.SortableColumnHeader>
@@ -176,11 +161,11 @@ export default function AppUsersTable({
               <Table.Column
                 allowsSorting
                 className="text-center"
-                id="lastLoginAt"
+                id="lastAccess"
               >
                 <Table.SortableColumnHeader
                   className="justify-center"
-                  sortDirection={sortDirectionFor("lastLoginAt")}
+                  sortDirection={sortDirectionFor("lastAccess")}
                 >
                   ÚLTIMO ACCESO
                 </Table.SortableColumnHeader>
@@ -204,7 +189,7 @@ export default function AppUsersTable({
                 <Table.Row key={user.id} id={user.id}>
                   <Table.Cell className="pr-0">
                     <Checkbox
-                      aria-label={`Seleccionar ${user.username}`}
+                      aria-label={`Seleccionar ${user.name}`}
                       slot="selection"
                       variant="secondary"
                     >
@@ -218,32 +203,15 @@ export default function AppUsersTable({
                   <Table.Cell>
                     {user.name} {user.surname}
                   </Table.Cell>
-                  <Table.Cell>{user.username}</Table.Cell>
                   <Table.Cell className="text-center">
-                    <Chip
-                      className={ROLE_CHIP_CLASS[user.role]}
-                      variant="primary"
-                      size="sm"
-                    >
-                      <Chip.Label>{ROLE_LABELS[user.role]}</Chip.Label>
-                    </Chip>
+                    {user.telephone}
                   </Table.Cell>
                   <Table.Cell>
-                    <div className="flex items-center gap-1.5">
-                      <Icon
-                        className={
-                          user.isActive
-                            ? "text-success"
-                            : "text-zinc-300 dark:text-zinc-700"
-                        }
-                        icon="octicon:dot-fill-24"
-                      />
-                      {user.isActive ? "Activo" : "Inactivo"}
-                    </div>
+                    <StatusIndicator active={user.accessAllowed} />
                   </Table.Cell>
                   <Table.Cell className="text-center">
-                    {user.lastLoginAt
-                      ? new Date(user.lastLoginAt).toLocaleString("es-ES", {
+                    {user.lastAccess
+                      ? new Date(user.lastAccess).toLocaleString("es-ES", {
                           year: "numeric",
                           month: "2-digit",
                           day: "2-digit",
@@ -276,12 +244,18 @@ export default function AppUsersTable({
                       </Button>
                       <Dropdown.Popover>
                         <Dropdown.Menu>
-                          <Dropdown.Item href={`/app-users/${user.id}/edit`}>
+                          <Dropdown.Item href={`/parking-users/${user.id}`}>
+                            <Icon className="size-5" icon="lucide:eye" />
+                            <Label>Ver</Label>
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            href={`/parking-users/${user.id}/edit`}
+                          >
                             <Icon className="size-5" icon="lucide:pencil" />
                             <Label>Editar</Label>
                           </Dropdown.Item>
                           <Dropdown.Item
-                            href={`/app-users/${user.id}/delete`}
+                            href={`/parking-users/${user.id}/delete`}
                             variant="danger"
                           >
                             <Icon

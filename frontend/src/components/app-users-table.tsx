@@ -2,6 +2,7 @@ import type { Key, Selection, SortDescriptor } from "@heroui/react";
 import {
   Button,
   Checkbox,
+  Chip,
   Dropdown,
   Label,
   ListBox,
@@ -10,9 +11,11 @@ import {
   Table,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import type { ParkingUserResponse } from "@parking-access/schemas";
+import type { AppUserResponse } from "@parking-access/schemas";
 
+import StatusIndicator from "@/components/status-indicator";
 import TablePagination from "@/components/table-pagination/table-pagination";
+import { ROLE_CHIP_CLASS, ROLE_LABELS } from "@/constants/roles";
 
 const PAGE_SIZE_OPTIONS = [
   { key: "5", label: "5" },
@@ -21,8 +24,8 @@ const PAGE_SIZE_OPTIONS = [
   { key: "0", label: "Todas" },
 ];
 
-type ParkingUsersTableProps = {
-  users: ParkingUserResponse[];
+type AppUsersTableProps = {
+  users: AppUserResponse[];
   totalUsers: number;
   page: number;
   pageSize: number;
@@ -39,7 +42,7 @@ type ParkingUsersTableProps = {
   onDeleteSelection: () => void;
 };
 
-export default function ParkingUsersTable({
+export default function AppUsersTable({
   users,
   totalUsers,
   page,
@@ -55,7 +58,7 @@ export default function ParkingUsersTable({
   onSelectionChange,
   onCreate,
   onDeleteSelection,
-}: ParkingUsersTableProps) {
+}: AppUsersTableProps) {
   const hasSelection =
     selectedKeys === "all" ||
     (selectedKeys instanceof Set && selectedKeys.size > 0);
@@ -72,7 +75,7 @@ export default function ParkingUsersTable({
               <SearchField.SearchIcon />
               <SearchField.Input
                 className="w-64"
-                placeholder="Buscar por nombre o apellidos"
+                placeholder="Buscar por nombre de usuario"
               />
               <SearchField.ClearButton />
             </SearchField.Group>
@@ -125,7 +128,7 @@ export default function ParkingUsersTable({
       <Table>
         <Table.ScrollContainer>
           <Table.Content
-            aria-label="Usuarios del parking"
+            aria-label="Usuarios del sistema"
             selectedKeys={selectedKeys}
             selectionMode="multiple"
             sortDescriptor={sortDescriptor}
@@ -146,13 +149,27 @@ export default function ParkingUsersTable({
                 <Table.SortableColumnHeader
                   sortDirection={sortDirectionFor("name")}
                 >
-                  NOMBRE
+                  NOMBRE COMPLETO
                 </Table.SortableColumnHeader>
               </Table.Column>
-              <Table.Column className="text-center">TELÉFONO</Table.Column>
-              <Table.Column allowsSorting id="accessAllowed">
+              <Table.Column allowsSorting id="username">
                 <Table.SortableColumnHeader
-                  sortDirection={sortDirectionFor("accessAllowed")}
+                  sortDirection={sortDirectionFor("username")}
+                >
+                  USUARIO
+                </Table.SortableColumnHeader>
+              </Table.Column>
+              <Table.Column allowsSorting className="text-center" id="role">
+                <Table.SortableColumnHeader
+                  className="justify-center"
+                  sortDirection={sortDirectionFor("role")}
+                >
+                  ROL
+                </Table.SortableColumnHeader>
+              </Table.Column>
+              <Table.Column allowsSorting id="isActive">
+                <Table.SortableColumnHeader
+                  sortDirection={sortDirectionFor("isActive")}
                 >
                   ESTADO
                 </Table.SortableColumnHeader>
@@ -160,11 +177,11 @@ export default function ParkingUsersTable({
               <Table.Column
                 allowsSorting
                 className="text-center"
-                id="lastAccess"
+                id="lastLoginAt"
               >
                 <Table.SortableColumnHeader
                   className="justify-center"
-                  sortDirection={sortDirectionFor("lastAccess")}
+                  sortDirection={sortDirectionFor("lastLoginAt")}
                 >
                   ÚLTIMO ACCESO
                 </Table.SortableColumnHeader>
@@ -188,7 +205,7 @@ export default function ParkingUsersTable({
                 <Table.Row key={user.id} id={user.id}>
                   <Table.Cell className="pr-0">
                     <Checkbox
-                      aria-label={`Seleccionar ${user.name}`}
+                      aria-label={`Seleccionar ${user.username}`}
                       slot="selection"
                       variant="secondary"
                     >
@@ -202,25 +219,22 @@ export default function ParkingUsersTable({
                   <Table.Cell>
                     {user.name} {user.surname}
                   </Table.Cell>
+                  <Table.Cell>{user.username}</Table.Cell>
                   <Table.Cell className="text-center">
-                    {user.telephone}
+                    <Chip
+                      className={ROLE_CHIP_CLASS[user.role]}
+                      variant="primary"
+                      size="sm"
+                    >
+                      <Chip.Label>{ROLE_LABELS[user.role]}</Chip.Label>
+                    </Chip>
                   </Table.Cell>
                   <Table.Cell>
-                    <div className="flex items-center gap-1.5">
-                      <Icon
-                        className={
-                          user.accessAllowed
-                            ? "text-success"
-                            : "text-zinc-300 dark:text-zinc-700"
-                        }
-                        icon="octicon:dot-fill-24"
-                      />
-                      {user.accessAllowed ? "Activo" : "Inactivo"}
-                    </div>
+                    <StatusIndicator active={user.isActive} />
                   </Table.Cell>
                   <Table.Cell className="text-center">
-                    {user.lastAccess
-                      ? new Date(user.lastAccess).toLocaleString("es-ES", {
+                    {user.lastLoginAt
+                      ? new Date(user.lastLoginAt).toLocaleString("es-ES", {
                           year: "numeric",
                           month: "2-digit",
                           day: "2-digit",
@@ -253,18 +267,12 @@ export default function ParkingUsersTable({
                       </Button>
                       <Dropdown.Popover>
                         <Dropdown.Menu>
-                          <Dropdown.Item href={`/parking-users/${user.id}`}>
-                            <Icon className="size-5" icon="lucide:eye" />
-                            <Label>Ver</Label>
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            href={`/parking-users/${user.id}/edit`}
-                          >
+                          <Dropdown.Item href={`/app-users/${user.id}/edit`}>
                             <Icon className="size-5" icon="lucide:pencil" />
                             <Label>Editar</Label>
                           </Dropdown.Item>
                           <Dropdown.Item
-                            href={`/parking-users/${user.id}/delete`}
+                            href={`/app-users/${user.id}/delete`}
                             variant="danger"
                           >
                             <Icon
