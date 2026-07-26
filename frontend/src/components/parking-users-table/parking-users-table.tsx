@@ -146,32 +146,42 @@ export default function ParkingUsersTable({
                 <Table.SortableColumnHeader
                   sortDirection={sortDirectionFor("name")}
                 >
-                  Nombre
+                  NOMBRE
                 </Table.SortableColumnHeader>
               </Table.Column>
-              <Table.Column>Teléfono</Table.Column>
+              <Table.Column className="text-center">TELÉFONO</Table.Column>
               <Table.Column allowsSorting id="accessAllowed">
                 <Table.SortableColumnHeader
                   sortDirection={sortDirectionFor("accessAllowed")}
                 >
-                  Estado
+                  ESTADO
                 </Table.SortableColumnHeader>
               </Table.Column>
-              <Table.Column allowsSorting id="lastAccess">
+              <Table.Column
+                allowsSorting
+                className="text-center"
+                id="lastAccess"
+              >
                 <Table.SortableColumnHeader
+                  className="justify-center"
                   sortDirection={sortDirectionFor("lastAccess")}
                 >
-                  Último acceso
+                  ÚLTIMO ACCESO
                 </Table.SortableColumnHeader>
               </Table.Column>
-              <Table.Column allowsSorting id="createdAt">
+              <Table.Column
+                allowsSorting
+                className="text-center"
+                id="createdAt"
+              >
                 <Table.SortableColumnHeader
+                  className="justify-center"
                   sortDirection={sortDirectionFor("createdAt")}
                 >
-                  Fecha de creación
+                  FECHA DE CREACIÓN
                 </Table.SortableColumnHeader>
               </Table.Column>
-              <Table.Column className="text-center">Acciones</Table.Column>
+              <Table.Column className="text-center">ACCIONES</Table.Column>
             </Table.Header>
             <Table.Body>
               {users.map((user) => (
@@ -192,19 +202,23 @@ export default function ParkingUsersTable({
                   <Table.Cell>
                     {user.name} {user.surname}
                   </Table.Cell>
-                  <Table.Cell>{user.telephone}</Table.Cell>
+                  <Table.Cell className="text-center">
+                    {user.telephone}
+                  </Table.Cell>
                   <Table.Cell>
                     <div className="flex items-center gap-1.5">
                       <Icon
                         className={
-                          user.accessAllowed ? "text-success" : "text-danger"
+                          user.accessAllowed
+                            ? "text-success"
+                            : "text-zinc-300 dark:text-zinc-700"
                         }
                         icon="octicon:dot-fill-24"
                       />
                       {user.accessAllowed ? "Activo" : "Inactivo"}
                     </div>
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell className="text-center">
                     {user.lastAccess
                       ? new Date(user.lastAccess).toLocaleString("es-ES", {
                           year: "numeric",
@@ -216,7 +230,7 @@ export default function ParkingUsersTable({
                         })
                       : "Nunca"}
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell className="text-center">
                     {new Date(user.createdAt).toLocaleString("es-ES", {
                       year: "numeric",
                       month: "2-digit",

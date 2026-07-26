@@ -145,29 +145,36 @@ export default function RecordsTable({
                 <Table.SortableColumnHeader
                   sortDirection={sortDirectionFor("userName")}
                 >
-                  Usuario
+                  USUARIO
                 </Table.SortableColumnHeader>
               </Table.Column>
-              <Table.Column>Matrícula</Table.Column>
-              <Table.Column allowsSorting id="success">
+              <Table.Column className="text-center">MATRÍCULA</Table.Column>
+              <Table.Column allowsSorting className="text-center" id="success">
                 <Table.SortableColumnHeader
+                  className="justify-center"
                   sortDirection={sortDirectionFor("success")}
                 >
-                  Acceso
+                  ACCESO
                 </Table.SortableColumnHeader>
               </Table.Column>
-              <Table.Column allowsSorting id="time">
+              <Table.Column allowsSorting className="text-center" id="time">
                 <Table.SortableColumnHeader
+                  className="justify-center"
                   sortDirection={sortDirectionFor("time")}
                 >
-                  Hora
+                  HORA
                 </Table.SortableColumnHeader>
               </Table.Column>
-              <Table.Column allowsSorting id="reasonForDenial">
+              <Table.Column
+                allowsSorting
+                className="text-center"
+                id="reasonForDenial"
+              >
                 <Table.SortableColumnHeader
+                  className="justify-center"
                   sortDirection={sortDirectionFor("reasonForDenial")}
                 >
-                  Motivo de rechazo
+                  MOTIVO DE RECHAZO
                 </Table.SortableColumnHeader>
               </Table.Column>
             </Table.Header>
@@ -195,7 +202,7 @@ export default function RecordsTable({
                       ? ` ${record.parkingUserSurname}`
                       : ""}
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell className="text-center">
                     {record.vehiclePlate ? (
                       <Chip color="accent" variant="primary" size="sm">
                         <Chip.Label>{record.vehiclePlate}</Chip.Label>
@@ -204,8 +211,8 @@ export default function RecordsTable({
                       "Ninguna"
                     )}
                   </Table.Cell>
-                  <Table.Cell>
-                    <div className="flex items-center gap-1.5">
+                  <Table.Cell className="text-center">
+                    <div className="flex items-center justify-center gap-1.5">
                       <Icon
                         className={
                           record.success ? "text-success" : "text-danger"
@@ -215,7 +222,7 @@ export default function RecordsTable({
                       {record.success ? "Permitido" : "Denegado"}
                     </div>
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell className="text-center">
                     {new Date(record.time).toLocaleString("es-ES", {
                       year: "numeric",
                       month: "2-digit",
@@ -225,7 +232,9 @@ export default function RecordsTable({
                       hour12: false,
                     })}
                   </Table.Cell>
-                  <Table.Cell>{record.reasonForDenial ?? "Ninguno"}</Table.Cell>
+                  <Table.Cell className="text-center">
+                    {record.reasonForDenial ?? "Ninguno"}
+                  </Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>

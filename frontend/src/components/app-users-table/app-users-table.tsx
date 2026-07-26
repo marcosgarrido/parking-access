@@ -14,7 +14,7 @@ import { Icon } from "@iconify/react";
 import type { AppUserResponse } from "@parking-access/schemas";
 
 import TablePagination from "@/components/table-pagination/table-pagination";
-import { ROLE_COLORS, ROLE_LABELS } from "@/constants/roles";
+import { ROLE_CHIP_CLASS, ROLE_LABELS } from "@/constants/roles";
 
 const PAGE_SIZE_OPTIONS = [
   { key: "5", label: "5" },
@@ -148,45 +148,56 @@ export default function AppUsersTable({
                 <Table.SortableColumnHeader
                   sortDirection={sortDirectionFor("name")}
                 >
-                  Nombre completo
+                  NOMBRE COMPLETO
                 </Table.SortableColumnHeader>
               </Table.Column>
               <Table.Column allowsSorting id="username">
                 <Table.SortableColumnHeader
                   sortDirection={sortDirectionFor("username")}
                 >
-                  Usuario
+                  USUARIO
                 </Table.SortableColumnHeader>
               </Table.Column>
               <Table.Column allowsSorting className="text-center" id="role">
                 <Table.SortableColumnHeader
+                  className="justify-center"
                   sortDirection={sortDirectionFor("role")}
                 >
-                  Rol
+                  ROL
                 </Table.SortableColumnHeader>
               </Table.Column>
               <Table.Column allowsSorting id="isActive">
                 <Table.SortableColumnHeader
                   sortDirection={sortDirectionFor("isActive")}
                 >
-                  Estado
+                  ESTADO
                 </Table.SortableColumnHeader>
               </Table.Column>
-              <Table.Column allowsSorting id="lastLoginAt">
+              <Table.Column
+                allowsSorting
+                className="text-center"
+                id="lastLoginAt"
+              >
                 <Table.SortableColumnHeader
+                  className="justify-center"
                   sortDirection={sortDirectionFor("lastLoginAt")}
                 >
-                  Último login
+                  ÚLTIMO ACCESO
                 </Table.SortableColumnHeader>
               </Table.Column>
-              <Table.Column allowsSorting id="createdAt">
+              <Table.Column
+                allowsSorting
+                className="text-center"
+                id="createdAt"
+              >
                 <Table.SortableColumnHeader
+                  className="justify-center"
                   sortDirection={sortDirectionFor("createdAt")}
                 >
-                  Fecha de creación
+                  FECHA DE CREACIÓN
                 </Table.SortableColumnHeader>
               </Table.Column>
-              <Table.Column className="text-center">Acciones</Table.Column>
+              <Table.Column className="text-center">ACCIONES</Table.Column>
             </Table.Header>
             <Table.Body>
               {users.map((user) => (
@@ -210,8 +221,8 @@ export default function AppUsersTable({
                   <Table.Cell>{user.username}</Table.Cell>
                   <Table.Cell className="text-center">
                     <Chip
+                      className={ROLE_CHIP_CLASS[user.role]}
                       variant="primary"
-                      color={ROLE_COLORS[user.role]}
                       size="sm"
                     >
                       <Chip.Label>{ROLE_LABELS[user.role]}</Chip.Label>
@@ -221,14 +232,16 @@ export default function AppUsersTable({
                     <div className="flex items-center gap-1.5">
                       <Icon
                         className={
-                          user.isActive ? "text-success" : "text-danger"
+                          user.isActive
+                            ? "text-success"
+                            : "text-zinc-300 dark:text-zinc-700"
                         }
                         icon="octicon:dot-fill-24"
                       />
                       {user.isActive ? "Activo" : "Inactivo"}
                     </div>
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell className="text-center">
                     {user.lastLoginAt
                       ? new Date(user.lastLoginAt).toLocaleString("es-ES", {
                           year: "numeric",
@@ -240,7 +253,7 @@ export default function AppUsersTable({
                         })
                       : "Nunca"}
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell className="text-center">
                     {new Date(user.createdAt).toLocaleString("es-ES", {
                       year: "numeric",
                       month: "2-digit",
