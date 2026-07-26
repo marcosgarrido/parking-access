@@ -2,7 +2,7 @@ import type { Key, Selection, SortDescriptor } from "@heroui/react";
 import {
   Button,
   Checkbox,
-  Dropdown,
+  Chip,
   Label,
   ListBox,
   SearchField,
@@ -10,9 +10,10 @@ import {
   Table,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import type { ParkingUserResponse } from "@parking-access/schemas";
+import type { RecordResponse } from "@parking-access/schemas";
 
 import TablePagination from "@/components/table-pagination/table-pagination";
+import { useAuth } from "@/hooks/use-auth";
 
 const PAGE_SIZE_OPTIONS = [
   { key: "5", label: "5" },
@@ -21,9 +22,9 @@ const PAGE_SIZE_OPTIONS = [
   { key: "0", label: "Todas" },
 ];
 
-type ParkingUsersTableProps = {
-  users: ParkingUserResponse[];
-  totalUsers: number;
+type RecordsTableProps = {
+  records: RecordResponse[];
+  totalRecords: number;
   page: number;
   pageSize: number;
   totalPages: number;
@@ -35,13 +36,12 @@ type ParkingUsersTableProps = {
   onSearchChange: (search: string) => void;
   onSortChange: (descriptor: SortDescriptor) => void;
   onSelectionChange: (keys: Selection) => void;
-  onCreate: () => void;
   onDeleteSelection: () => void;
 };
 
-export default function ParkingUsersTable({
-  users,
-  totalUsers,
+export default function RecordsTable({
+  records,
+  totalRecords,
   page,
   pageSize,
   totalPages,
@@ -53,9 +53,11 @@ export default function ParkingUsersTable({
   onSearchChange,
   onSortChange,
   onSelectionChange,
-  onCreate,
   onDeleteSelection,
-}: ParkingUsersTableProps) {
+}: RecordsTableProps) {
+  const { user } = useAuth();
+  const canDelete = user?.role === "ADMIN";
+
   const hasSelection =
     selectedKeys === "all" ||
     (selectedKeys instanceof Set && selectedKeys.size > 0);
@@ -64,7 +66,7 @@ export default function ParkingUsersTable({
     sortDescriptor.column === column ? sortDescriptor.direction : undefined;
 
   return (
-    <div className="flex flex-col gap-4 w-full max-w-5xl">
+    <div className="flex flex-col gap-4 w-full">
       <div className="flex justify-between items-center w-full">
         <div className="flex gap-2">
           <SearchField value={search} onChange={onSearchChange}>
@@ -72,21 +74,16 @@ export default function ParkingUsersTable({
               <SearchField.SearchIcon />
               <SearchField.Input
                 className="w-64"
-                placeholder="Buscar por nombre o apellidos"
+                placeholder="Buscar por usuario"
               />
               <SearchField.ClearButton />
             </SearchField.Group>
           </SearchField>
 
-          <Button variant="primary" onPress={onCreate}>
-            <Icon icon="lucide:user-round-plus" />
-            Nuevo
-          </Button>
-
-          {hasSelection && (
+          {canDelete && hasSelection && (
             <Button variant="danger" onPress={onDeleteSelection}>
               <Icon icon="lucide:trash-2" />
-              Eliminar usuarios
+              Eliminar registros
             </Button>
           )}
         </div>
@@ -125,93 +122,101 @@ export default function ParkingUsersTable({
       <Table>
         <Table.ScrollContainer>
           <Table.Content
-            aria-label="Usuarios del parking"
+            aria-label="Tabla de registros"
             selectedKeys={selectedKeys}
-            selectionMode="multiple"
+            selectionMode={canDelete ? "multiple" : "none"}
             sortDescriptor={sortDescriptor}
             onSelectionChange={onSelectionChange}
             onSortChange={onSortChange}
           >
             <Table.Header>
-              <Table.Column className="pr-0">
-                <Checkbox aria-label="Seleccionar todos" slot="selection">
-                  <Checkbox.Content>
-                    <Checkbox.Control>
-                      <Checkbox.Indicator />
-                    </Checkbox.Control>
-                  </Checkbox.Content>
-                </Checkbox>
-              </Table.Column>
-              <Table.Column allowsSorting isRowHeader id="name">
+              {canDelete && (
+                <Table.Column className="pr-0">
+                  <Checkbox aria-label="Seleccionar todos" slot="selection">
+                    <Checkbox.Content>
+                      <Checkbox.Control>
+                        <Checkbox.Indicator />
+                      </Checkbox.Control>
+                    </Checkbox.Content>
+                  </Checkbox>
+                </Table.Column>
+              )}
+              <Table.Column allowsSorting isRowHeader id="userName">
                 <Table.SortableColumnHeader
-                  sortDirection={sortDirectionFor("name")}
+                  sortDirection={sortDirectionFor("userName")}
                 >
-                  Nombre
+                  Usuario
                 </Table.SortableColumnHeader>
               </Table.Column>
-              <Table.Column>Teléfono</Table.Column>
-              <Table.Column>Estado</Table.Column>
-              <Table.Column allowsSorting id="lastAccess">
+              <Table.Column>Matrícula</Table.Column>
+              <Table.Column allowsSorting id="success">
                 <Table.SortableColumnHeader
-                  sortDirection={sortDirectionFor("lastAccess")}
+                  sortDirection={sortDirectionFor("success")}
                 >
-                  Último acceso
+                  Acceso
                 </Table.SortableColumnHeader>
               </Table.Column>
-              <Table.Column allowsSorting id="createdAt">
+              <Table.Column allowsSorting id="time">
                 <Table.SortableColumnHeader
-                  sortDirection={sortDirectionFor("createdAt")}
+                  sortDirection={sortDirectionFor("time")}
                 >
-                  Fecha de creación
+                  Hora
                 </Table.SortableColumnHeader>
               </Table.Column>
-              <Table.Column>Acciones</Table.Column>
+              <Table.Column allowsSorting id="reasonForDenial">
+                <Table.SortableColumnHeader
+                  sortDirection={sortDirectionFor("reasonForDenial")}
+                >
+                  Motivo de rechazo
+                </Table.SortableColumnHeader>
+              </Table.Column>
             </Table.Header>
             <Table.Body>
-              {users.map((user) => (
-                <Table.Row key={user.id} id={user.id}>
-                  <Table.Cell className="pr-0">
-                    <Checkbox
-                      aria-label={`Seleccionar ${user.name}`}
-                      slot="selection"
-                      variant="secondary"
-                    >
-                      <Checkbox.Content>
-                        <Checkbox.Control>
-                          <Checkbox.Indicator />
-                        </Checkbox.Control>
-                      </Checkbox.Content>
-                    </Checkbox>
+              {records.map((record) => (
+                <Table.Row key={record.id} id={record.id}>
+                  {canDelete && (
+                    <Table.Cell className="pr-0">
+                      <Checkbox
+                        aria-label={`Seleccionar registro ${record.id}`}
+                        slot="selection"
+                        variant="secondary"
+                      >
+                        <Checkbox.Content>
+                          <Checkbox.Control>
+                            <Checkbox.Indicator />
+                          </Checkbox.Control>
+                        </Checkbox.Content>
+                      </Checkbox>
+                    </Table.Cell>
+                  )}
+                  <Table.Cell>
+                    {record.parkingUserName}
+                    {record.parkingUserSurname
+                      ? ` ${record.parkingUserSurname}`
+                      : ""}
                   </Table.Cell>
                   <Table.Cell>
-                    {user.name} {user.surname}
+                    {record.vehiclePlate ? (
+                      <Chip color="accent" variant="primary" size="sm">
+                        <Chip.Label>{record.vehiclePlate}</Chip.Label>
+                      </Chip>
+                    ) : (
+                      "Ninguna"
+                    )}
                   </Table.Cell>
-                  <Table.Cell>{user.telephone}</Table.Cell>
                   <Table.Cell>
                     <div className="flex items-center gap-1.5">
                       <Icon
                         className={
-                          user.accessAllowed ? "text-success" : "text-danger"
+                          record.success ? "text-success" : "text-danger"
                         }
                         icon="octicon:dot-fill-24"
                       />
-                      {user.accessAllowed ? "Activo" : "Inactivo"}
+                      {record.success ? "Permitido" : "Denegado"}
                     </div>
                   </Table.Cell>
                   <Table.Cell>
-                    {user.lastAccess
-                      ? new Date(user.lastAccess).toLocaleString("es-ES", {
-                          year: "numeric",
-                          month: "2-digit",
-                          day: "2-digit",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: false,
-                        })
-                      : "Nunca"}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {new Date(user.createdAt).toLocaleString("es-ES", {
+                    {new Date(record.time).toLocaleString("es-ES", {
                       year: "numeric",
                       month: "2-digit",
                       day: "2-digit",
@@ -220,42 +225,7 @@ export default function ParkingUsersTable({
                       hour12: false,
                     })}
                   </Table.Cell>
-                  <Table.Cell>
-                    <Dropdown>
-                      <Button
-                        isIconOnly
-                        aria-label="Acciones"
-                        size="sm"
-                        variant="ghost"
-                      >
-                        <Icon icon="lucide:ellipsis-vertical" />
-                      </Button>
-                      <Dropdown.Popover>
-                        <Dropdown.Menu>
-                          <Dropdown.Item href={`/parking-users/${user.id}`}>
-                            <Icon className="size-5" icon="lucide:eye" />
-                            <Label>Ver</Label>
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            href={`/parking-users/${user.id}/edit`}
-                          >
-                            <Icon className="size-5" icon="lucide:pencil" />
-                            <Label>Editar</Label>
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            href={`/parking-users/${user.id}/delete`}
-                            variant="danger"
-                          >
-                            <Icon
-                              className="size-5 text-danger"
-                              icon="lucide:trash-2"
-                            />
-                            <Label>Eliminar</Label>
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown.Popover>
-                    </Dropdown>
-                  </Table.Cell>
+                  <Table.Cell>{record.reasonForDenial ?? "Ninguno"}</Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>
@@ -264,8 +234,8 @@ export default function ParkingUsersTable({
         <Table.Footer>
           <TablePagination
             page={page}
-            totalCount={totalUsers}
-            totalLabel="usuarios"
+            totalCount={totalRecords}
+            totalLabel="registros"
             totalPages={totalPages}
             onPageChange={onPageChange}
           />

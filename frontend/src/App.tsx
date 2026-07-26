@@ -8,6 +8,7 @@ import AccessPage from "@/pages/access";
 import AppUsersPage from "@/pages/app-users";
 import DeleteParkingUserPage from "@/pages/delete-parking-user";
 import DeleteParkingUsersPage from "@/pages/delete-parking-users";
+import DeleteRecordsPage from "@/pages/delete-records";
 import EditParkingUserPage from "@/pages/edit-parking-user";
 import HomePage from "@/pages/home";
 import LoginPage from "@/pages/login";
@@ -33,7 +34,11 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <HomePage /> },
           { path: "access", element: <AccessPage /> },
-          { path: "records", element: <RecordsPage /> },
+          {
+            path: "records",
+            element: <RecordsPage />,
+            children: [{ path: "delete-many", element: <DeleteRecordsPage /> }],
+          },
           {
             path: "parking-users",
             children: [
