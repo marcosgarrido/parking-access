@@ -6,12 +6,16 @@ import { AppProvider } from "@/app-provider";
 import DefaultLayout from "@/layouts/default-layout";
 import AccessPage from "@/pages/access";
 import AppUsersPage from "@/pages/app-users";
+import DeleteAppUserPage from "@/pages/delete-app-user";
+import DeleteAppUsersPage from "@/pages/delete-app-users";
 import DeleteParkingUserPage from "@/pages/delete-parking-user";
 import DeleteParkingUsersPage from "@/pages/delete-parking-users";
 import DeleteRecordsPage from "@/pages/delete-records";
+import EditAppUserPage from "@/pages/edit-app-user";
 import EditParkingUserPage from "@/pages/edit-parking-user";
 import HomePage from "@/pages/home";
 import LoginPage from "@/pages/login";
+import NewAppUserPage from "@/pages/new-app-user";
 import NewParkingUserPage from "@/pages/new-parking-user";
 import ParkingUsersPage from "@/pages/parking-users";
 import RecordsPage from "@/pages/records";
@@ -60,7 +64,24 @@ const router = createBrowserRouter([
               },
             ],
           },
-          { path: "app-users", element: <AppUsersPage /> },
+          {
+            path: "app-users",
+            children: [
+              {
+                path: "",
+                element: <AppUsersPage />,
+                children: [
+                  { path: ":id/delete", element: <DeleteAppUserPage /> },
+                  { path: "delete-many", element: <DeleteAppUsersPage /> },
+                ],
+              },
+              { path: "new", element: <NewAppUserPage /> },
+              {
+                path: ":id",
+                children: [{ path: "edit", element: <EditAppUserPage /> }],
+              },
+            ],
+          },
         ],
       },
     ],
