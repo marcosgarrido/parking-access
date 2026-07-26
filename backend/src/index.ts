@@ -5,6 +5,7 @@ import { prisma } from "@/database";
 import { errorHandler } from "@/middlewares/error-handler";
 import authRoutes from "@/routes/auth-routes";
 import parkingUsersRoutes from "@/routes/parking-users-routes";
+import recordsRoutes from "@/routes/records-routes";
 
 const app = express();
 const port = 4000;
@@ -23,6 +24,7 @@ app.get("/api/health", async (_req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/parking-users", parkingUsersRoutes);
+app.use("/api/records", recordsRoutes);
 
 app.use(errorHandler);
 
