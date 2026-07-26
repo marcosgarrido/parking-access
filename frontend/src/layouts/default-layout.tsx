@@ -6,7 +6,7 @@ export default function DefaultLayout() {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <main className="container mx-auto max-w-7xl px-6 grow pt-12">
+      <main className="container mx-auto max-w-6xl px-6 grow pt-12">
         <Outlet />
       </main>
     </div>

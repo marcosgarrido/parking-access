@@ -1,4 +1,4 @@
-import { Button, Chip, toast, Tooltip } from "@heroui/react";
+import { Avatar, Button, Dropdown, Label, toast } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import type { AppRole } from "@parking-access/schemas";
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
@@ -13,25 +13,25 @@ const NAV = [
   {
     to: "/access",
     label: "Acceso",
-    icon: <Icon className="size-5" icon="lucide:key-round" />,
+    icon: <Icon className="size-4" icon="lucide:key-round" />,
     allow: ["ADMIN", "MANAGER", "SUPERVISOR"] as AppRole[],
   },
   {
     to: "/records",
     label: "Historial",
-    icon: <Icon className="size-5" icon="lucide:notepad-text" />,
+    icon: <Icon className="size-4" icon="lucide:notepad-text" />,
     allow: ["ADMIN", "MANAGER", "SUPERVISOR"] as AppRole[],
   },
   {
     to: "/parking-users",
     label: "Usuarios del Parking",
-    icon: <Icon className="size-5" icon="lucide:user-round" />,
+    icon: <Icon className="size-4" icon="lucide:user-round" />,
     allow: ["ADMIN", "MANAGER"] as AppRole[],
   },
   {
     to: "/app-users",
     label: "Usuarios del Sistema",
-    icon: <Icon className="size-5" icon="lucide:cog" />,
+    icon: <Icon className="size-4" icon="lucide:cog" />,
     allow: ["ADMIN"] as AppRole[],
   },
 ];
@@ -56,6 +56,7 @@ export function Navbar() {
 
   const role = user?.role;
   const name = user?.name;
+  const initials = user ? (user.name[0] + user.surname[0]).toUpperCase() : "";
 
   const items = NAV.filter((it) => (role ? it.allow.includes(role) : false));
   const isActive = (to: string) =>
@@ -63,7 +64,7 @@ export function Navbar() {
 
   return (
     <nav className="h-20 border-b border-border">
-      <div className="mx-auto max-w-7xl h-full flex items-center justify-between px-6">
+      <div className="mx-auto max-w-6xl h-full flex items-center justify-between px-6">
         <div className="flex items-center">
           <RouterLink to="/">
             <LogoIcon compact />
@@ -74,7 +75,7 @@ export function Navbar() {
           {items.map(({ to, label, icon }) => (
             <Button
               className="font-normal"
-              size="md"
+              size="sm"
               key={to}
               render={(props) => (
                 <RouterLink
@@ -92,29 +93,29 @@ export function Navbar() {
 
         <div className="flex items-center gap-2 pt-3">
           {user && (
-            <Chip size="md" color="accent" variant="soft">
-              <Chip.Label>
-                {name}
-                <span className="text-muted text-xs ml-1">
-                  ({ROLE_LABELS[user.role]})
-                </span>
-              </Chip.Label>
-
-              <Tooltip delay={500}>
-                <Button
-                  isIconOnly
-                  aria-label="Cerrar sesión"
-                  size="sm"
-                  variant="ghost"
-                  onPress={handleLogout}
-                >
-                  <Icon className="size-4" icon="lucide:log-out" />
-                </Button>
-                <Tooltip.Content>
-                  <p>Cerrar sesión</p>
-                </Tooltip.Content>
-              </Tooltip>
-            </Chip>
+            <Dropdown>
+              <Button isIconOnly aria-label="Cuenta" variant="ghost">
+                <Avatar color="accent" variant="soft" size="sm">
+                  <Avatar.Fallback>{initials}</Avatar.Fallback>
+                </Avatar>
+              </Button>
+              <Dropdown.Popover>
+                <Dropdown.Menu>
+                  <Dropdown.Item isDisabled>
+                    <div className="flex flex-col">
+                      <Label>{name}</Label>
+                      <span className="text-muted text-xs">
+                        ({ROLE_LABELS[user.role]})
+                      </span>
+                    </div>
+                  </Dropdown.Item>
+                  <Dropdown.Item variant="default" onAction={handleLogout}>
+                    <Icon className="size-4" icon="lucide:log-out" />
+                    <Label>Cerrar sesión</Label>
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown.Popover>
+            </Dropdown>
           )}
 
           <ThemeSwitch />
