@@ -61,6 +61,16 @@ export default function ParkingUsersPage() {
   if (isLoading) return <p>Cargando...</p>;
   if (error) return <p>Error al cargar los usuarios del parking</p>;
 
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize);
+    setPage(1);
+  };
+
+  const handleSortChange = (descriptor: SortDescriptor) => {
+    setSortDescriptor(descriptor);
+    setPage(1);
+  };
+
   const handleDeleteSelection = () => {
     const selectedIds =
       selectedKeys === "all"
@@ -84,16 +94,10 @@ export default function ParkingUsersPage() {
         onCreate={() => navigate("/parking-users/new")}
         onDeleteSelection={handleDeleteSelection}
         onPageChange={setPage}
-        onPageSizeChange={(newPageSize) => {
-          setPageSize(newPageSize);
-          setPage(1);
-        }}
+        onPageSizeChange={handlePageSizeChange}
         onSearchChange={setSearch}
         onSelectionChange={setSelectedKeys}
-        onSortChange={(descriptor) => {
-          setSortDescriptor(descriptor);
-          setPage(1);
-        }}
+        onSortChange={handleSortChange}
       />
       <Outlet />
     </section>

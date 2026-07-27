@@ -1,26 +1,11 @@
-import type { Key, Selection, SortDescriptor } from "@heroui/react";
-import {
-  Button,
-  Checkbox,
-  Chip,
-  Label,
-  ListBox,
-  SearchField,
-  Select,
-  Table,
-} from "@heroui/react";
+import type { Selection, SortDescriptor } from "@heroui/react";
+import { Button, Checkbox, Chip, SearchField, Table } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import type { RecordResponse } from "@parking-access/schemas";
 
+import PageSizeSelect from "@/components/page-size-select";
 import TablePagination from "@/components/table-pagination/table-pagination";
 import { useAuth } from "@/hooks/use-auth";
-
-const PAGE_SIZE_OPTIONS = [
-  { key: "5", label: "5" },
-  { key: "10", label: "10" },
-  { key: "15", label: "15" },
-  { key: "0", label: "Todas" },
-];
 
 type RecordsTableProps = {
   records: RecordResponse[];
@@ -89,33 +74,10 @@ export default function RecordsTable({
         </div>
 
         <div className="flex gap-5 items-center">
-          <Select
-            className="flex-row items-center gap-2"
-            value={String(pageSize)}
-            onChange={(value: Key | Key[] | null) => {
-              if (value) onPageSizeChange(Number(value));
-            }}
-          >
-            <Label className="text-muted">Filas por página</Label>
-            <Select.Trigger>
-              <Select.Value />
-              <Select.Indicator />
-            </Select.Trigger>
-            <Select.Popover>
-              <ListBox>
-                {PAGE_SIZE_OPTIONS.map((option) => (
-                  <ListBox.Item
-                    key={option.key}
-                    id={option.key}
-                    textValue={option.label}
-                  >
-                    {option.label}
-                    <ListBox.ItemIndicator />
-                  </ListBox.Item>
-                ))}
-              </ListBox>
-            </Select.Popover>
-          </Select>
+          <PageSizeSelect
+            pageSize={pageSize}
+            onPageSizeChange={onPageSizeChange}
+          />
         </div>
       </div>
 

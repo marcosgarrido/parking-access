@@ -65,6 +65,16 @@ export default function AppUsersPage() {
   if (isLoading) return <p>Cargando...</p>;
   if (error) return <p>Error al cargar los usuarios del sistema</p>;
 
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize);
+    setPage(1);
+  };
+
+  const handleSortChange = (descriptor: SortDescriptor) => {
+    setSortDescriptor(descriptor);
+    setPage(1);
+  };
+
   const handleDeleteSelection = () => {
     const selectedIds =
       selectedKeys === "all"
@@ -88,16 +98,10 @@ export default function AppUsersPage() {
         onCreate={() => navigate("/app-users/new")}
         onDeleteSelection={handleDeleteSelection}
         onPageChange={setPage}
-        onPageSizeChange={(newPageSize) => {
-          setPageSize(newPageSize);
-          setPage(1);
-        }}
+        onPageSizeChange={handlePageSizeChange}
         onSearchChange={setSearch}
         onSelectionChange={setSelectedKeys}
-        onSortChange={(descriptor) => {
-          setSortDescriptor(descriptor);
-          setPage(1);
-        }}
+        onSortChange={handleSortChange}
       />
       <Outlet />
     </section>

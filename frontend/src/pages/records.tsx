@@ -61,6 +61,16 @@ export default function RecordsPage() {
   if (isLoading) return <p>Cargando...</p>;
   if (error) return <p>Error al cargar el historial de accesos</p>;
 
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize);
+    setPage(1);
+  };
+
+  const handleSortChange = (descriptor: SortDescriptor) => {
+    setSortDescriptor(descriptor);
+    setPage(1);
+  };
+
   const handleDeleteSelection = () => {
     const selectedIds =
       selectedKeys === "all"
@@ -83,16 +93,10 @@ export default function RecordsPage() {
         totalRecords={data?.meta.totalRecords ?? 0}
         onDeleteSelection={handleDeleteSelection}
         onPageChange={setPage}
-        onPageSizeChange={(newPageSize) => {
-          setPageSize(newPageSize);
-          setPage(1);
-        }}
+        onPageSizeChange={handlePageSizeChange}
         onSearchChange={setSearch}
         onSelectionChange={setSelectedKeys}
-        onSortChange={(descriptor) => {
-          setSortDescriptor(descriptor);
-          setPage(1);
-        }}
+        onSortChange={handleSortChange}
       />
       <Outlet />
     </section>
