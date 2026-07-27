@@ -4,8 +4,8 @@ import { Icon } from "@iconify/react";
 import type { RecordResponse } from "@parking-access/schemas";
 
 import PageSizeSelect from "@/components/tables/page-size-select";
-import TableEmptyState from "@/components/tables/table-empty-state";
 import TablePagination from "@/components/tables/table-pagination/table-pagination";
+import TableStateMessage from "@/components/tables/table-state-message";
 import { useAuth } from "@/hooks/use-auth";
 
 type RecordsTableProps = {
@@ -17,6 +17,7 @@ type RecordsTableProps = {
   search: string;
   sortDescriptor: SortDescriptor;
   selectedKeys: Selection;
+  isError?: boolean;
   onPageChange: (page: number) => void;
   onPageSizeChange: (pageSize: number) => void;
   onSearchChange: (search: string) => void;
@@ -34,6 +35,7 @@ export default function RecordsTable({
   search,
   sortDescriptor,
   selectedKeys,
+  isError = false,
   onPageChange,
   onPageSizeChange,
   onSearchChange,
@@ -141,7 +143,9 @@ export default function RecordsTable({
                 </Table.SortableColumnHeader>
               </Table.Column>
             </Table.Header>
-            <Table.Body renderEmptyState={TableEmptyState}>
+            <Table.Body
+              renderEmptyState={() => <TableStateMessage isError={isError} />}
+            >
               {records.map((record) => (
                 <Table.Row key={record.id} id={record.id}>
                   {canDelete && (

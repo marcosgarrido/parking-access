@@ -66,7 +66,6 @@ export default function ParkingUsersPage() {
   }
 
   if (isLoading) return <p>Cargando...</p>;
-  if (error) return <p>Error al cargar los usuarios del parking</p>;
 
   const handleSortChange = (descriptor: SortDescriptor) => {
     setSort(descriptor);
@@ -86,6 +85,7 @@ export default function ParkingUsersPage() {
   return (
     <section className="flex justify-center w-full">
       <ParkingUsersTable
+        isError={!!error}
         page={page}
         pageSize={pageSize}
         search={search}

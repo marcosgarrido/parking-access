@@ -10,7 +10,7 @@ import { Icon } from "@iconify/react";
 import { PlateSchema } from "@parking-access/schemas";
 import { useState } from "react";
 
-import EmptyStateMessage from "@/components/empty-state-message";
+import IconMessage from "@/components/icon-message";
 
 type VehiclesTabProps = {
   vehicles: string[];
@@ -89,7 +89,7 @@ export default function VehiclesTab({
 
       {vehicles.length === 0 ? (
         <div className="flex flex-1 items-center justify-center">
-          <EmptyStateMessage
+          <IconMessage
             icon="mdi:car-off"
             message="No se han asignado vehículos"
           />

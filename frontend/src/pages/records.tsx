@@ -66,7 +66,6 @@ export default function RecordsPage() {
   }
 
   if (isLoading) return <p>Cargando...</p>;
-  if (error) return <p>Error al cargar el historial de accesos</p>;
 
   const handleSortChange = (descriptor: SortDescriptor) => {
     setSort(descriptor);
@@ -86,6 +85,7 @@ export default function RecordsPage() {
   return (
     <section className="flex justify-center w-full">
       <RecordsTable
+        isError={!!error}
         page={page}
         pageSize={pageSize}
         records={data?.data ?? []}

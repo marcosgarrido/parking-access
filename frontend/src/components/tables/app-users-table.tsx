@@ -13,8 +13,8 @@ import type { AppUserResponse } from "@parking-access/schemas";
 
 import PageSizeSelect from "@/components/tables/page-size-select";
 import StatusIndicator from "@/components/tables/status-indicator";
-import TableEmptyState from "@/components/tables/table-empty-state";
 import TablePagination from "@/components/tables/table-pagination/table-pagination";
+import TableStateMessage from "@/components/tables/table-state-message";
 import { ROLE_CHIP_CLASS, ROLE_LABELS } from "@/constants/roles";
 import { useQueryString } from "@/hooks/use-query-string";
 
@@ -27,6 +27,7 @@ type AppUsersTableProps = {
   search: string;
   sortDescriptor: SortDescriptor;
   selectedKeys: Selection;
+  isError?: boolean;
   onPageChange: (page: number) => void;
   onPageSizeChange: (pageSize: number) => void;
   onSearchChange: (search: string) => void;
@@ -45,6 +46,7 @@ export default function AppUsersTable({
   search,
   sortDescriptor,
   selectedKeys,
+  isError = false,
   onPageChange,
   onPageSizeChange,
   onSearchChange,
@@ -173,7 +175,9 @@ export default function AppUsersTable({
               </Table.Column>
               <Table.Column className="text-center">ACCIONES</Table.Column>
             </Table.Header>
-            <Table.Body renderEmptyState={TableEmptyState}>
+            <Table.Body
+              renderEmptyState={() => <TableStateMessage isError={isError} />}
+            >
               {users.map((user) => (
                 <Table.Row key={user.id} id={user.id}>
                   <Table.Cell className="pr-0">

@@ -70,7 +70,6 @@ export default function AppUsersPage() {
   }
 
   if (isLoading) return <p>Cargando...</p>;
-  if (error) return <p>Error al cargar los usuarios del sistema</p>;
 
   const handleSortChange = (descriptor: SortDescriptor) => {
     setSort(descriptor);
@@ -90,6 +89,7 @@ export default function AppUsersPage() {
   return (
     <section className="flex justify-center w-full">
       <AppUsersTable
+        isError={!!error}
         page={page}
         pageSize={pageSize}
         search={search}
