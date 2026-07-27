@@ -1,7 +1,7 @@
 import { AlertDialog, Button } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { deleteParkingUser, parkingUserQuery } from "@/api/parking-users";
 
@@ -9,11 +9,13 @@ export default function DeleteParkingUserModal() {
   const { id } = useParams();
   const userId = Number(id);
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery(parkingUserQuery(userId));
 
-  const goBack = () => navigate("/parking-users", { replace: true });
+  const goBack = () =>
+    navigate(`/parking-users${location.search}`, { replace: true });
 
   const mutation = useMutation({
     mutationFn: () => deleteParkingUser(userId),

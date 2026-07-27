@@ -14,6 +14,7 @@ import PageSizeSelect from "@/components/tables/page-size-select";
 import StatusIndicator from "@/components/tables/status-indicator";
 import TableEmptyState from "@/components/tables/table-empty-state";
 import TablePagination from "@/components/tables/table-pagination/table-pagination";
+import { useQueryString } from "@/hooks/use-query-string";
 
 type ParkingUsersTableProps = {
   users: ParkingUserResponse[];
@@ -56,6 +57,8 @@ export default function ParkingUsersTable({
 
   const sortDirectionFor = (column: string) =>
     sortDescriptor.column === column ? sortDescriptor.direction : undefined;
+
+  const paramStr = useQueryString();
 
   return (
     <div className="flex flex-col gap-4 w-full max-w-6xl">
@@ -214,18 +217,20 @@ export default function ParkingUsersTable({
                       </Button>
                       <Dropdown.Popover>
                         <Dropdown.Menu>
-                          <Dropdown.Item href={`/parking-users/${user.id}`}>
+                          <Dropdown.Item
+                            href={`/parking-users/${user.id}${paramStr}`}
+                          >
                             <Icon className="size-5" icon="lucide:eye" />
                             <Label>Ver</Label>
                           </Dropdown.Item>
                           <Dropdown.Item
-                            href={`/parking-users/${user.id}/edit`}
+                            href={`/parking-users/${user.id}/edit${paramStr}`}
                           >
                             <Icon className="size-5" icon="lucide:pencil" />
                             <Label>Editar</Label>
                           </Dropdown.Item>
                           <Dropdown.Item
-                            href={`/parking-users/${user.id}/delete`}
+                            href={`/parking-users/${user.id}/delete${paramStr}`}
                             variant="danger"
                           >
                             <Icon

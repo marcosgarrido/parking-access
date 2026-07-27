@@ -16,6 +16,7 @@ import StatusIndicator from "@/components/tables/status-indicator";
 import TableEmptyState from "@/components/tables/table-empty-state";
 import TablePagination from "@/components/tables/table-pagination/table-pagination";
 import { ROLE_CHIP_CLASS, ROLE_LABELS } from "@/constants/roles";
+import { useQueryString } from "@/hooks/use-query-string";
 
 type AppUsersTableProps = {
   users: AppUserResponse[];
@@ -58,6 +59,8 @@ export default function AppUsersTable({
 
   const sortDirectionFor = (column: string) =>
     sortDescriptor.column === column ? sortDescriptor.direction : undefined;
+
+  const paramStr = useQueryString();
 
   return (
     <div className="flex flex-col gap-4 w-full max-w-6xl">
@@ -237,12 +240,14 @@ export default function AppUsersTable({
                       </Button>
                       <Dropdown.Popover>
                         <Dropdown.Menu>
-                          <Dropdown.Item href={`/app-users/${user.id}/edit`}>
+                          <Dropdown.Item
+                            href={`/app-users/${user.id}/edit${paramStr}`}
+                          >
                             <Icon className="size-5" icon="lucide:pencil" />
                             <Label>Editar</Label>
                           </Dropdown.Item>
                           <Dropdown.Item
-                            href={`/app-users/${user.id}/delete`}
+                            href={`/app-users/${user.id}/delete${paramStr}`}
                             variant="danger"
                           >
                             <Icon

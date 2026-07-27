@@ -11,7 +11,8 @@ export default function DeleteAppUsersModal() {
   const queryClient = useQueryClient();
   const userIds: number[] = location.state?.userIds ?? [];
 
-  const goBack = () => navigate("/app-users", { replace: true });
+  const goBack = () =>
+    navigate(`/app-users${location.search}`, { replace: true });
 
   const mutation = useMutation({
     mutationFn: () => deleteAppUsers(userIds),

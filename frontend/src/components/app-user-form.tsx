@@ -24,7 +24,7 @@ import {
 } from "@parking-access/schemas";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { createAppUser, updateAppUser } from "@/api/app-users";
 import { ROLE_LABELS } from "@/constants/roles";
@@ -62,6 +62,7 @@ export default function AppUserForm({
   mode = "create",
 }: AppUserFormProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
 
   const initialValues = valuesFromUser(initialUser);
@@ -73,7 +74,8 @@ export default function AppUserForm({
   const isDirty = JSON.stringify(values) !== JSON.stringify(initialValues);
   const toggleVisibility = () => setIsVisible((v) => !v);
 
-  const goBack = () => navigate("/app-users", { replace: true });
+  const goBack = () =>
+    navigate(`/app-users${location.search}`, { replace: true });
 
   const mutation = useMutation({
     mutationFn: (payload: AppUserCreateBody | AppUserUpdateBody) => {
@@ -146,7 +148,7 @@ export default function AppUserForm({
 
   return (
     <div className="flex w-full items-center justify-center">
-      <Surface className="flex w-full max-w-lg flex-col gap-6 p-10">
+      <Surface className="flex w-full max-w-md min-h-[400px] flex-col gap-6 p-6">
         <div className="flex items-center justify-between">
           <h1 className="text-lg font-semibold">
             {mode === "edit" ? "Editar usuario" : "Crear usuario"}

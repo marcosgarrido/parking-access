@@ -11,7 +11,8 @@ export default function DeleteRecordsModal() {
   const queryClient = useQueryClient();
   const recordIds: number[] = location.state?.recordIds ?? [];
 
-  const goBack = () => navigate("/records", { replace: true });
+  const goBack = () =>
+    navigate(`/records${location.search}`, { replace: true });
 
   const mutation = useMutation({
     mutationFn: () => deleteRecords(recordIds),

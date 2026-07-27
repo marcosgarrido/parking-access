@@ -6,6 +6,8 @@ import { Outlet, useNavigate } from "react-router-dom";
 
 import { appUsersQuery } from "@/api/app-users";
 import AppUsersTable from "@/components/tables/app-users-table";
+import { useQueryString } from "@/hooks/use-query-string";
+import { useTableUrlState } from "@/hooks/use-table-url-state";
 
 const SORTABLE_COLUMNS = [
   "name",
@@ -18,31 +20,36 @@ const SORTABLE_COLUMNS = [
 
 export default function AppUsersPage() {
   const navigate = useNavigate();
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const paramStr = useQueryString();
+  const {
+    page,
+    pageSize,
+    sortBy: rawSortBy,
+    sortOrder,
+    search: urlSearch,
+    setPage,
+    setPageSize,
+    setSort,
+    setSearch: setUrlSearch,
+  } = useTableUrlState({ sortBy: "createdAt" });
+  const [search, setSearch] = useState(urlSearch);
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set());
-  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-    column: "username",
-    direction: "ascending",
-  });
 
   useEffect(() => {
-    const id = setTimeout(() => {
-      setDebouncedSearch(search);
-      setPage(1);
-    }, 300);
+    const id = setTimeout(() => setUrlSearch(search), 300);
 
     return () => clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   const sortBy = (
-    SORTABLE_COLUMNS.includes(String(sortDescriptor.column))
-      ? sortDescriptor.column
-      : "username"
+    SORTABLE_COLUMNS.includes(rawSortBy) ? rawSortBy : "createdAt"
   ) as AppUserSortBy;
-  const sortOrder = sortDescriptor.direction === "ascending" ? "asc" : "desc";
+
+  const sortDescriptor: SortDescriptor = {
+    column: sortBy,
+    direction: sortOrder === "asc" ? "ascending" : "descending",
+  };
 
   const { data, isLoading, error } = useQuery({
     ...appUsersQuery({
@@ -50,7 +57,7 @@ export default function AppUsersPage() {
       pageSize,
       sortBy,
       sortOrder,
-      search: debouncedSearch,
+      search: urlSearch,
     }),
     placeholderData: keepPreviousData,
   });
@@ -65,14 +72,8 @@ export default function AppUsersPage() {
   if (isLoading) return <p>Cargando...</p>;
   if (error) return <p>Error al cargar los usuarios del sistema</p>;
 
-  const handlePageSizeChange = (newPageSize: number) => {
-    setPageSize(newPageSize);
-    setPage(1);
-  };
-
   const handleSortChange = (descriptor: SortDescriptor) => {
-    setSortDescriptor(descriptor);
-    setPage(1);
+    setSort(descriptor);
   };
 
   const handleDeleteSelection = () => {
@@ -81,7 +82,9 @@ export default function AppUsersPage() {
         ? (data?.data.map((user) => user.id) ?? [])
         : Array.from(selectedKeys, Number);
 
-    navigate("/app-users/delete-many", { state: { userIds: selectedIds } });
+    navigate(`/app-users/delete-many${paramStr}`, {
+      state: { userIds: selectedIds },
+    });
   };
 
   return (
@@ -95,10 +98,10 @@ export default function AppUsersPage() {
         totalPages={data?.meta.totalPages ?? 1}
         totalUsers={data?.meta.totalUsers ?? 0}
         users={data?.data ?? []}
-        onCreate={() => navigate("/app-users/new")}
+        onCreate={() => navigate(`/app-users/new${paramStr}`)}
         onDeleteSelection={handleDeleteSelection}
         onPageChange={setPage}
-        onPageSizeChange={handlePageSizeChange}
+        onPageSizeChange={setPageSize}
         onSearchChange={setSearch}
         onSelectionChange={setSelectedKeys}
         onSortChange={handleSortChange}

@@ -11,7 +11,8 @@ export default function DeleteParkingUsersModal() {
   const queryClient = useQueryClient();
   const userIds: number[] = location.state?.userIds ?? [];
 
-  const goBack = () => navigate("/parking-users", { replace: true });
+  const goBack = () =>
+    navigate(`/parking-users${location.search}`, { replace: true });
 
   const mutation = useMutation({
     mutationFn: () => deleteParkingUsers(userIds),
