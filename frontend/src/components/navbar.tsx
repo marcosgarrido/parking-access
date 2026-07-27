@@ -66,7 +66,7 @@ export function Navbar() {
     <nav className="h-20 border-b border-border">
       <div className="mx-auto max-w-6xl h-full flex items-center justify-between px-6">
         <div className="flex items-center">
-          <RouterLink to="/">
+          <RouterLink to="/access">
             <LogoIcon compact />
           </RouterLink>
         </div>
@@ -101,11 +101,13 @@ export function Navbar() {
               </Button>
               <Dropdown.Popover>
                 <Dropdown.Menu>
-                  <Dropdown.Item isDisabled>
+                  <Dropdown.Item isDisabled className="dropdown-item-info">
                     <div className="flex flex-col">
-                      <Label>{name}</Label>
+                      <Label className="text-accent">
+                        {name} {user.surname}
+                      </Label>
                       <span className="text-muted text-xs">
-                        ({ROLE_LABELS[user.role]})
+                        {ROLE_LABELS[user.role]}
                       </span>
                     </div>
                   </Dropdown.Item>

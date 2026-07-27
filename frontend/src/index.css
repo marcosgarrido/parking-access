@@ -30,4 +30,8 @@ body {
   .pagination__link[data-active="true"] {
     @apply bg-accent text-accent-foreground hover:bg-accent-hover;
   }
+
+  .dropdown-item-info {
+    --disabled-opacity: 1;
+  }
 }

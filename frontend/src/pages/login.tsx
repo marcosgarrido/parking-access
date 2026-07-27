@@ -36,7 +36,7 @@ export default function LoginPage() {
         const me = await fetchMe();
 
         setUser(me);
-        navigate("/", { replace: true });
+        navigate("/access", { replace: true });
       } catch {
         setUser(null);
       }
