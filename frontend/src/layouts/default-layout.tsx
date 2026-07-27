@@ -1,10 +1,13 @@
+import { useIsFetching } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
+import { DelayedSpinnerOverlay } from "@/components/delayed-spinner-overlay";
 import { Navbar } from "@/components/navbar";
 
 export default function DefaultLayout() {
   const navigate = useNavigate();
+  const isFetching = useIsFetching() > 0;
 
   useEffect(() => {
     const expiry = localStorage.getItem("sessionExpiresAt");
@@ -32,6 +35,7 @@ export default function DefaultLayout() {
       <main className="container mx-auto max-w-6xl px-6 grow pt-12">
         <Outlet />
       </main>
+      <DelayedSpinnerOverlay delay={250} show={isFetching} size="lg" />
     </div>
   );
 }
