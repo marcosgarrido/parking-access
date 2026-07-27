@@ -28,6 +28,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { createAppUser, updateAppUser } from "@/api/app-users";
 import { ROLE_LABELS } from "@/constants/roles";
+import { useUnsavedChangesBlocker } from "@/hooks/use-unsaved-changes-blocker";
 import ConfirmExitModal from "@/modals/confirm-exit-modal";
 
 const ROLES: AppRole[] = ["ADMIN", "MANAGER", "SUPERVISOR"];
@@ -69,9 +70,9 @@ export default function AppUserForm({
   const [values, setValues] = useState<FormValues>(initialValues);
   const [isVisible, setIsVisible] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [showConfirmExit, setShowConfirmExit] = useState(false);
 
   const isDirty = JSON.stringify(values) !== JSON.stringify(initialValues);
+  const { blocker, allowNextNavigation } = useUnsavedChangesBlocker(isDirty);
   const toggleVisibility = () => setIsVisible((v) => !v);
 
   const goBack = () =>
@@ -92,6 +93,7 @@ export default function AppUserForm({
           queryKey: ["app-user", initialUser.id],
         });
       }
+      allowNextNavigation();
       goBack();
     },
   });
@@ -141,14 +143,9 @@ export default function AppUserForm({
       if (mutation.isError) mutation.reset();
     };
 
-  const handleCancel = () => {
-    if (isDirty) setShowConfirmExit(true);
-    else goBack();
-  };
-
   return (
     <div className="flex w-full items-center justify-center">
-      <Surface className="flex w-full max-w-md min-h-[400px] flex-col gap-6 p-8">
+      <Surface className="flex w-full max-w-md min-h-100 flex-col gap-6 p-8">
         <div className="flex items-center justify-between">
           <h1 className="text-lg font-semibold">
             {mode === "edit" ? "Editar usuario" : "Crear usuario"}
@@ -290,7 +287,7 @@ export default function AppUserForm({
           )}
 
           <div className="mt-4 flex justify-end gap-3">
-            <Button type="button" variant="ghost" onPress={handleCancel}>
+            <Button type="button" variant="ghost" onPress={goBack}>
               Cancelar
             </Button>
             <Button
@@ -305,9 +302,9 @@ export default function AppUserForm({
       </Surface>
 
       <ConfirmExitModal
-        isOpen={showConfirmExit}
-        onCancel={() => setShowConfirmExit(false)}
-        onConfirm={goBack}
+        isOpen={blocker.state === "blocked"}
+        onCancel={() => blocker.state === "blocked" && blocker.reset()}
+        onConfirm={() => blocker.state === "blocked" && blocker.proceed()}
       />
     </div>
   );

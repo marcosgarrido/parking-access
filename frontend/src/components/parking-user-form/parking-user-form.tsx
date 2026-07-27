@@ -20,21 +20,19 @@ export default function ParkingUserForm({
   const {
     values,
     personalDataErrors,
-    showConfirmExit,
+    blocker,
     activeTab,
     plateInput,
     plateError,
     tabWidth,
     mutation,
     setField,
-    setShowConfirmExit,
     handleSubmit,
     handleAddPlate,
     handleRemovePlate,
     handleCancel,
     handleTabChange,
     handlePlateInputChange,
-    goBack,
   } = useParkingUserForm({ initialUser, mode });
 
   return (
@@ -152,9 +150,9 @@ export default function ParkingUserForm({
       </Surface>
 
       <ConfirmExitModal
-        isOpen={showConfirmExit}
-        onCancel={() => setShowConfirmExit(false)}
-        onConfirm={goBack}
+        isOpen={blocker.state === "blocked"}
+        onCancel={() => blocker.state === "blocked" && blocker.reset()}
+        onConfirm={() => blocker.state === "blocked" && blocker.proceed()}
       />
     </div>
   );

@@ -13,6 +13,7 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { createParkingUser, updateParkingUser } from "@/api/parking-users";
+import { useUnsavedChangesBlocker } from "@/hooks/use-unsaved-changes-blocker";
 
 type FormValues = {
   name: string;
@@ -50,7 +51,6 @@ export function useParkingUserForm({
   const [personalDataErrors, setPersonalDataErrors] = useState<
     Record<string, string>
   >({});
-  const [showConfirmExit, setShowConfirmExit] = useState(false);
   const [activeTab, setActiveTab] = useState("personal-data");
   const [plateInput, setPlateInput] = useState("");
   const [plateError, setPlateError] = useState<string | undefined>(undefined);
@@ -59,6 +59,8 @@ export function useParkingUserForm({
     activeTab === "schedule" ? "max-w-[1024px]" : "max-w-[480px]";
 
   const isDirty = JSON.stringify(values) !== JSON.stringify(initialValues);
+
+  const { blocker, allowNextNavigation } = useUnsavedChangesBlocker(isDirty);
 
   const goBack = () =>
     navigate(`/parking-users${location.search}`, { replace: true });
@@ -78,6 +80,7 @@ export function useParkingUserForm({
           queryKey: ["parking-user", initialUser.id],
         });
       }
+      allowNextNavigation();
       goBack();
     },
   });
@@ -157,11 +160,6 @@ export function useParkingUserForm({
     }));
   };
 
-  const handleCancel = () => {
-    if (isDirty) setShowConfirmExit(true);
-    else goBack();
-  };
-
   const handleTabChange = (key: React.Key) => {
     setActiveTab(String(key));
     setPersonalDataErrors({});
@@ -176,20 +174,18 @@ export function useParkingUserForm({
   return {
     values,
     personalDataErrors,
-    showConfirmExit,
+    blocker,
     activeTab,
     plateInput,
     plateError,
     tabWidth,
     mutation,
     setField,
-    setShowConfirmExit,
     handleSubmit,
     handleAddPlate,
     handleRemovePlate,
-    handleCancel,
+    handleCancel: goBack,
     handleTabChange,
     handlePlateInputChange,
-    goBack,
   };
 }
