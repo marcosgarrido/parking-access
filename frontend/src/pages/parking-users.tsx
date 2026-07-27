@@ -51,6 +51,13 @@ export default function ParkingUsersPage() {
     placeholderData: keepPreviousData,
   });
 
+  const [prevData, setPrevData] = useState(data);
+
+  if (data !== prevData) {
+    setPrevData(data);
+    setSelectedKeys(new Set());
+  }
+
   if (isLoading) return <p>Cargando...</p>;
   if (error) return <p>Error al cargar los usuarios del parking</p>;
 

@@ -1,3 +1,5 @@
+import DeleteParkingUserModal from "@/modals/delete-parking-user-modal";
+
 export default function DeleteParkingUserPage() {
-  return <p>Confirmación de borrar usuario del parking (dummy)</p>;
+  return <DeleteParkingUserModal />;
 }

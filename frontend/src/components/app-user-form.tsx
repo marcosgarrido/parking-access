@@ -146,7 +146,7 @@ export default function AppUserForm({
 
   return (
     <div className="flex w-full items-center justify-center">
-      <Surface className="flex w-full max-w-md flex-col gap-6 p-10">
+      <Surface className="flex w-full max-w-lg flex-col gap-6 p-10">
         <div className="flex items-center justify-between">
           <h1 className="text-lg font-semibold">
             {mode === "edit" ? "Editar usuario" : "Crear usuario"}
@@ -166,7 +166,7 @@ export default function AppUserForm({
         </div>
 
         <Form
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-4 pt-4"
           validationBehavior="aria"
           onSubmit={handleSubmit}
         >
