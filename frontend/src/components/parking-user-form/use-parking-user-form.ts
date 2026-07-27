@@ -2,11 +2,11 @@ import type {
   ParkingUserCreateBody,
   ParkingUserResponse,
   ParkingUserUpdateBody,
+  TimeshiftBase,
 } from "@parking-access/schemas";
 import {
   ParkingUserCreateBodySchema,
   ParkingUserUpdateBodySchema,
-  PlateSchema,
 } from "@parking-access/schemas";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -21,6 +21,7 @@ type FormValues = {
   telephone: string;
   accessAllowed: boolean;
   vehicles: string[];
+  timeshifts: TimeshiftBase[];
 };
 
 function valuesFromUser(user?: ParkingUserResponse): FormValues {
@@ -30,6 +31,7 @@ function valuesFromUser(user?: ParkingUserResponse): FormValues {
     telephone: user?.telephone ?? "",
     accessAllowed: user?.accessAllowed ?? true,
     vehicles: user?.vehicles.map((vehicle) => vehicle.plate) ?? [],
+    timeshifts: user?.timeshifts ?? [],
   };
 }
 
@@ -52,8 +54,6 @@ export function useParkingUserForm({
     Record<string, string>
   >({});
   const [activeTab, setActiveTab] = useState("personal-data");
-  const [plateInput, setPlateInput] = useState("");
-  const [plateError, setPlateError] = useState<string | undefined>(undefined);
 
   const tabWidth =
     activeTab === "schedule" ? "max-w-[1024px]" : "max-w-[480px]";
@@ -94,7 +94,7 @@ export function useParkingUserForm({
       telephone: values.telephone,
       accessAllowed: values.accessAllowed,
       vehicles: values.vehicles.map((plate) => ({ plate })),
-      timeshifts: initialUser?.timeshifts ?? [],
+      timeshifts: values.timeshifts,
     };
 
     const schema =
@@ -130,27 +130,8 @@ export function useParkingUserForm({
       if (mutation.isError) mutation.reset();
     };
 
-  const handleAddPlate = () => {
-    const result = PlateSchema.safeParse(plateInput);
-
-    if (!result.success) {
-      setPlateError(result.error.issues[0]?.message);
-
-      return;
-    }
-
-    if (values.vehicles.includes(result.data)) {
-      setPlateError("La matrícula ya existe.");
-
-      return;
-    }
-
-    setValues((prev) => ({
-      ...prev,
-      vehicles: [...prev.vehicles, result.data],
-    }));
-    setPlateInput("");
-    setPlateError(undefined);
+  const handleAddPlate = (plate: string) => {
+    setValues((prev) => ({ ...prev, vehicles: [...prev.vehicles, plate] }));
   };
 
   const handleRemovePlate = (plateToRemove: string) => {
@@ -160,15 +141,34 @@ export function useParkingUserForm({
     }));
   };
 
+  const handleAddTimeshift = (timeshifts: TimeshiftBase[]) => {
+    setValues((prev) => ({ ...prev, timeshifts }));
+  };
+
+  const handleRemoveTimeshift = (timeshiftToRemove: TimeshiftBase) => {
+    setValues((prev) => ({
+      ...prev,
+      timeshifts: prev.timeshifts.filter((timeshift) => {
+        if (timeshiftToRemove.allDay) {
+          return !(
+            timeshift.dayOfWeek === timeshiftToRemove.dayOfWeek &&
+            timeshift.allDay
+          );
+        }
+
+        return !(
+          timeshift.dayOfWeek === timeshiftToRemove.dayOfWeek &&
+          timeshift.startTime === timeshiftToRemove.startTime &&
+          timeshift.endTime === timeshiftToRemove.endTime &&
+          !timeshift.allDay
+        );
+      }),
+    }));
+  };
+
   const handleTabChange = (key: React.Key) => {
     setActiveTab(String(key));
     setPersonalDataErrors({});
-    setPlateError(undefined);
-  };
-
-  const handlePlateInputChange = (value: string) => {
-    setPlateInput(value);
-    setPlateError(undefined);
   };
 
   return {
@@ -176,8 +176,6 @@ export function useParkingUserForm({
     personalDataErrors,
     blocker,
     activeTab,
-    plateInput,
-    plateError,
     tabWidth,
     mutation,
     setField,
@@ -186,6 +184,7 @@ export function useParkingUserForm({
     handleRemovePlate,
     handleCancel: goBack,
     handleTabChange,
-    handlePlateInputChange,
+    handleAddTimeshift,
+    handleRemoveTimeshift,
   };
 }

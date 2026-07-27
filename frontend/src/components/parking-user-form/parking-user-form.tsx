@@ -5,6 +5,7 @@ import type { ParkingUserResponse } from "@parking-access/schemas";
 import ConfirmExitModal from "@/modals/confirm-exit-modal";
 
 import PersonalDataTab from "./personal-data-tab";
+import ScheduleTab from "./schedule-tab";
 import { useParkingUserForm } from "./use-parking-user-form";
 import VehiclesTab from "./vehicles-tab";
 
@@ -22,8 +23,6 @@ export default function ParkingUserForm({
     personalDataErrors,
     blocker,
     activeTab,
-    plateInput,
-    plateError,
     tabWidth,
     mutation,
     setField,
@@ -32,7 +31,8 @@ export default function ParkingUserForm({
     handleRemovePlate,
     handleCancel,
     handleTabChange,
-    handlePlateInputChange,
+    handleAddTimeshift,
+    handleRemoveTimeshift,
   } = useParkingUserForm({ initialUser, mode });
 
   return (
@@ -114,17 +114,18 @@ export default function ParkingUserForm({
               id="vehicles"
             >
               <VehiclesTab
-                plateError={plateError}
-                plateInput={plateInput}
                 vehicles={values.vehicles}
                 onAddPlate={handleAddPlate}
-                onPlateInputChange={handlePlateInputChange}
                 onRemovePlate={handleRemovePlate}
               />
             </Tabs.Panel>
 
-            <Tabs.Panel id="schedule">
-              <p className="text-muted pt-6 text-sm">Próximamente.</p>
+            <Tabs.Panel className="pt-4" id="schedule">
+              <ScheduleTab
+                timeshifts={values.timeshifts}
+                onAddTimeshift={handleAddTimeshift}
+                onRemoveTimeshift={handleRemoveTimeshift}
+              />
             </Tabs.Panel>
           </Tabs>
 

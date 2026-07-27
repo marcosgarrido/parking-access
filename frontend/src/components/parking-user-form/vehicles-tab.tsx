@@ -7,26 +7,45 @@ import {
   TextField,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import { PlateSchema } from "@parking-access/schemas";
+import { useState } from "react";
 
 import EmptyStateMessage from "@/components/empty-state-message";
 
 type VehiclesTabProps = {
   vehicles: string[];
-  plateInput: string;
-  plateError: string | undefined;
-  onPlateInputChange: (value: string) => void;
-  onAddPlate: () => void;
+  onAddPlate: (plate: string) => void;
   onRemovePlate: (plate: string) => void;
 };
 
 export default function VehiclesTab({
   vehicles,
-  plateInput,
-  plateError,
-  onPlateInputChange,
   onAddPlate,
   onRemovePlate,
 }: VehiclesTabProps) {
+  const [plateInput, setPlateInput] = useState("");
+  const [plateError, setPlateError] = useState<string | undefined>(undefined);
+
+  const handleAddPlate = () => {
+    const result = PlateSchema.safeParse(plateInput);
+
+    if (!result.success) {
+      setPlateError(result.error.issues[0]?.message);
+
+      return;
+    }
+
+    if (vehicles.includes(result.data)) {
+      setPlateError("La matrícula ya existe.");
+
+      return;
+    }
+
+    onAddPlate(result.data);
+    setPlateInput("");
+    setPlateError(undefined);
+  };
+
   return (
     <>
       <div className="flex items-end gap-2">
@@ -34,11 +53,14 @@ export default function VehiclesTab({
           className="flex-1"
           isInvalid={!!plateError}
           value={plateInput}
-          onChange={onPlateInputChange}
+          onChange={(value) => {
+            setPlateInput(value);
+            setPlateError(undefined);
+          }}
           onKeyDown={(event) => {
             if (event.key === "Enter") {
               event.preventDefault();
-              onAddPlate();
+              handleAddPlate();
             }
           }}
         >
@@ -55,7 +77,7 @@ export default function VehiclesTab({
           aria-label="Añadir matrícula"
           type="button"
           variant="primary"
-          onPress={onAddPlate}
+          onPress={handleAddPlate}
         >
           <Icon icon="lucide:plus" />
         </Button>
