@@ -6,7 +6,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import type { z } from "zod";
 
 import { recordsQuery } from "@/api/records";
-import RecordsTable from "@/components/records-table";
+import RecordsTable from "@/components/tables/records-table";
 
 type SortBy = z.infer<typeof RecordSortBySchema>;
 

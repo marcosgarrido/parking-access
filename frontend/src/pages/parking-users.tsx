@@ -6,7 +6,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import type { z } from "zod";
 
 import { parkingUsersQuery } from "@/api/parking-users";
-import ParkingUsersTable from "@/components/parking-users-table";
+import ParkingUsersTable from "@/components/tables/parking-users-table";
 
 type SortBy = z.infer<typeof ParkingUserSortBySchema>;
 

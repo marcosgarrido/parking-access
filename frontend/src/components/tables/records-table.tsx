@@ -3,9 +3,9 @@ import { Button, Checkbox, Chip, SearchField, Table } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import type { RecordResponse } from "@parking-access/schemas";
 
-import PageSizeSelect from "@/components/page-size-select";
-import TableEmptyState from "@/components/table-empty-state";
-import TablePagination from "@/components/table-pagination/table-pagination";
+import PageSizeSelect from "@/components/tables/page-size-select";
+import TableEmptyState from "@/components/tables/table-empty-state";
+import TablePagination from "@/components/tables/table-pagination/table-pagination";
 import { useAuth } from "@/hooks/use-auth";
 
 type RecordsTableProps = {

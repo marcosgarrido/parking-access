@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 import { appUsersQuery } from "@/api/app-users";
-import AppUsersTable from "@/components/app-users-table";
+import AppUsersTable from "@/components/tables/app-users-table";
 
 const SORTABLE_COLUMNS = [
   "name",
