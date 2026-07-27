@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import type { RecordResponse } from "@parking-access/schemas";
 
 import PageSizeSelect from "@/components/page-size-select";
+import TableEmptyState from "@/components/table-empty-state";
 import TablePagination from "@/components/table-pagination/table-pagination";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -58,7 +59,7 @@ export default function RecordsTable({
             <SearchField.Group>
               <SearchField.SearchIcon />
               <SearchField.Input
-                className="w-64"
+                className="w-56"
                 placeholder="Buscar por usuario"
               />
               <SearchField.ClearButton />
@@ -140,7 +141,7 @@ export default function RecordsTable({
                 </Table.SortableColumnHeader>
               </Table.Column>
             </Table.Header>
-            <Table.Body>
+            <Table.Body renderEmptyState={TableEmptyState}>
               {records.map((record) => (
                 <Table.Row key={record.id} id={record.id}>
                   {canDelete && (

@@ -58,9 +58,11 @@ export default function TablePagination({
           </Pagination.Item>
         </Pagination.Content>
       )}
-      <Pagination.Summary className="justify-self-end">
-        Total {totalCount} {totalLabel}
-      </Pagination.Summary>
+      {totalCount > 0 && (
+        <Pagination.Summary className="col-start-3 justify-self-end">
+          Total {totalCount} {totalLabel}
+        </Pagination.Summary>
+      )}
     </Pagination>
   );
 }

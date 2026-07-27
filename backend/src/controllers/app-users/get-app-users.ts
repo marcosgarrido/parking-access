@@ -14,7 +14,12 @@ export async function getAppUsers(req: Request, res: Response) {
 
   const where: Prisma.AppUserWhereInput | undefined =
     search && search.trim().length > 0
-      ? { username: { contains: search, mode: "insensitive" } }
+      ? {
+          OR: [
+            { name: { startsWith: search, mode: "insensitive" } },
+            { surname: { startsWith: search, mode: "insensitive" } },
+          ],
+        }
       : undefined;
 
   const isAll = pageSize === 0;

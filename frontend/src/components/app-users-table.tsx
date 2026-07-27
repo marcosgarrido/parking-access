@@ -13,6 +13,7 @@ import type { AppUserResponse } from "@parking-access/schemas";
 
 import PageSizeSelect from "@/components/page-size-select";
 import StatusIndicator from "@/components/status-indicator";
+import TableEmptyState from "@/components/table-empty-state";
 import TablePagination from "@/components/table-pagination/table-pagination";
 import { ROLE_CHIP_CLASS, ROLE_LABELS } from "@/constants/roles";
 
@@ -66,8 +67,8 @@ export default function AppUsersTable({
             <SearchField.Group>
               <SearchField.SearchIcon />
               <SearchField.Input
-                className="w-64"
-                placeholder="Buscar por nombre de usuario"
+                className="w-56"
+                placeholder="Buscar por nombre completo"
               />
               <SearchField.ClearButton />
             </SearchField.Group>
@@ -169,7 +170,7 @@ export default function AppUsersTable({
               </Table.Column>
               <Table.Column className="text-center">ACCIONES</Table.Column>
             </Table.Header>
-            <Table.Body>
+            <Table.Body renderEmptyState={TableEmptyState}>
               {users.map((user) => (
                 <Table.Row key={user.id} id={user.id}>
                   <Table.Cell className="pr-0">
