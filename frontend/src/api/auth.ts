@@ -19,6 +19,7 @@ export async function login(
 
 export async function logout() {
   await apiFetch("/api/auth/logout", { method: "POST" });
+  localStorage.removeItem("sessionExpiresAt");
 }
 
 export async function fetchMe() {
