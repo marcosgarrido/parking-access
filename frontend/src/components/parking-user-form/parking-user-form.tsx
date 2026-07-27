@@ -40,7 +40,7 @@ export default function ParkingUserForm({
   return (
     <div className="flex w-full items-center justify-center">
       <Surface
-        className={`flex h-125 w-full flex-col gap-6 p-6 transition-all duration-300 ${tabWidth}`}
+        className={`flex h-125 w-full flex-col gap-6 p-8 transition-all duration-300 ${tabWidth}`}
       >
         <div className="flex items-center justify-between">
           <h1 className="text-lg font-semibold">

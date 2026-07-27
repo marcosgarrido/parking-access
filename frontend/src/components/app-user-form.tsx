@@ -148,7 +148,7 @@ export default function AppUserForm({
 
   return (
     <div className="flex w-full items-center justify-center">
-      <Surface className="flex w-full max-w-md min-h-[400px] flex-col gap-6 p-6">
+      <Surface className="flex w-full max-w-md min-h-[400px] flex-col gap-6 p-8">
         <div className="flex items-center justify-between">
           <h1 className="text-lg font-semibold">
             {mode === "edit" ? "Editar usuario" : "Crear usuario"}
