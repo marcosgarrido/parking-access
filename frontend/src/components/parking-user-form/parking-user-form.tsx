@@ -11,7 +11,7 @@ import VehiclesTab from "./vehicles-tab";
 
 type ParkingUserFormProps = {
   initialUser?: ParkingUserResponse;
-  mode?: "create" | "edit";
+  mode?: "create" | "edit" | "view";
 };
 
 export default function ParkingUserForm({
@@ -35,6 +35,8 @@ export default function ParkingUserForm({
     handleRemoveTimeshift,
   } = useParkingUserForm({ initialUser, mode });
 
+  const isReadOnly = mode === "view";
+
   return (
     <div className="flex w-full items-center justify-center">
       <Surface
@@ -42,9 +44,14 @@ export default function ParkingUserForm({
       >
         <div className="flex items-center justify-between">
           <h1 className="text-lg font-semibold">
-            {mode === "edit" ? "Editar usuario" : "Crear usuario"}
+            {mode === "edit"
+              ? "Editar usuario"
+              : mode === "view"
+                ? "Detalle de usuario"
+                : "Crear usuario"}
           </h1>
           <Switch
+            isDisabled={isReadOnly}
             isSelected={values.accessAllowed}
             size="md"
             onChange={setField("accessAllowed")}
@@ -100,6 +107,7 @@ export default function ParkingUserForm({
             <Tabs.Panel className="flex flex-col gap-4 pt-4" id="personal-data">
               <PersonalDataTab
                 errors={personalDataErrors}
+                isReadOnly={isReadOnly}
                 name={values.name}
                 surname={values.surname}
                 telephone={values.telephone}
@@ -114,6 +122,7 @@ export default function ParkingUserForm({
               id="vehicles"
             >
               <VehiclesTab
+                isReadOnly={isReadOnly}
                 vehicles={values.vehicles}
                 onAddPlate={handleAddPlate}
                 onRemovePlate={handleRemovePlate}
@@ -122,6 +131,7 @@ export default function ParkingUserForm({
 
             <Tabs.Panel className="pt-4" id="schedule">
               <ScheduleTab
+                isReadOnly={isReadOnly}
                 timeshifts={values.timeshifts}
                 onAddTimeshift={handleAddTimeshift}
                 onRemoveTimeshift={handleRemoveTimeshift}
@@ -136,16 +146,22 @@ export default function ParkingUserForm({
           )}
 
           <div className="mt-auto flex justify-end gap-3 pt-6">
-            <Button type="button" variant="ghost" onPress={handleCancel}>
-              Cancelar
-            </Button>
             <Button
-              isDisabled={mutation.isPending}
-              type="submit"
-              variant="primary"
+              type="button"
+              variant={isReadOnly ? "primary" : "ghost"}
+              onPress={handleCancel}
             >
-              {mode === "edit" ? "Guardar" : "Crear"}
+              {isReadOnly ? "Volver" : "Cancelar"}
             </Button>
+            {!isReadOnly && (
+              <Button
+                isDisabled={mutation.isPending}
+                type="submit"
+                variant="primary"
+              >
+                {mode === "edit" ? "Guardar" : "Crear"}
+              </Button>
+            )}
           </div>
         </Form>
       </Surface>

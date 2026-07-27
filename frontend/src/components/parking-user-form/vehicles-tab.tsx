@@ -14,12 +14,14 @@ import EmptyStateMessage from "@/components/empty-state-message";
 
 type VehiclesTabProps = {
   vehicles: string[];
+  isReadOnly?: boolean;
   onAddPlate: (plate: string) => void;
   onRemovePlate: (plate: string) => void;
 };
 
 export default function VehiclesTab({
   vehicles,
+  isReadOnly = false,
   onAddPlate,
   onRemovePlate,
 }: VehiclesTabProps) {
@@ -48,40 +50,42 @@ export default function VehiclesTab({
 
   return (
     <>
-      <div className="flex items-end gap-2">
-        <TextField
-          className="flex-1"
-          isInvalid={!!plateError}
-          value={plateInput}
-          onChange={(value) => {
-            setPlateInput(value);
-            setPlateError(undefined);
-          }}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              event.preventDefault();
-              handleAddPlate();
-            }
-          }}
-        >
-          <Label>Matrícula</Label>
-          <Input
-            placeholder="Introduzca la matrícula del vehículo"
-            type="text"
-            variant="secondary"
-          />
-          <FieldError>{plateError}</FieldError>
-        </TextField>
-        <Button
-          isIconOnly
-          aria-label="Añadir matrícula"
-          type="button"
-          variant="primary"
-          onPress={handleAddPlate}
-        >
-          <Icon icon="lucide:plus" />
-        </Button>
-      </div>
+      {!isReadOnly && (
+        <div className="flex items-end gap-2">
+          <TextField
+            className="flex-1"
+            isInvalid={!!plateError}
+            value={plateInput}
+            onChange={(value) => {
+              setPlateInput(value);
+              setPlateError(undefined);
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                handleAddPlate();
+              }
+            }}
+          >
+            <Label>Matrícula</Label>
+            <Input
+              placeholder="Introduzca la matrícula del vehículo"
+              type="text"
+              variant="secondary"
+            />
+            <FieldError>{plateError}</FieldError>
+          </TextField>
+          <Button
+            isIconOnly
+            aria-label="Añadir matrícula"
+            type="button"
+            variant="primary"
+            onPress={handleAddPlate}
+          >
+            <Icon icon="lucide:plus" />
+          </Button>
+        </div>
+      )}
 
       {vehicles.length === 0 ? (
         <div className="flex flex-1 items-center justify-center">
@@ -102,14 +106,16 @@ export default function VehiclesTab({
                 variant="primary"
               >
                 <Chip.Label>{plate}</Chip.Label>
-                <button
-                  aria-label={`Eliminar matrícula ${plate}`}
-                  className="cursor-pointer rounded-full p-0.5 bg-white/70 text-accent transition-opacity hover:bg-white"
-                  type="button"
-                  onClick={() => onRemovePlate(plate)}
-                >
-                  <Icon icon="lucide:x" />
-                </button>
+                {!isReadOnly && (
+                  <button
+                    aria-label={`Eliminar matrícula ${plate}`}
+                    className="cursor-pointer rounded-full p-0.5 bg-white/70 text-accent transition-opacity hover:bg-white"
+                    type="button"
+                    onClick={() => onRemovePlate(plate)}
+                  >
+                    <Icon icon="lucide:x" />
+                  </button>
+                )}
               </Chip>
             ))}
           </div>

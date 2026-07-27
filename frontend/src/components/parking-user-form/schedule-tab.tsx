@@ -12,12 +12,14 @@ const DAY_ORDER = [1, 2, 3, 4, 5, 6, 0];
 
 type ScheduleTabProps = {
   timeshifts: TimeshiftBase[];
+  isReadOnly?: boolean;
   onAddTimeshift: (timeshifts: TimeshiftBase[]) => void;
   onRemoveTimeshift: (timeshift: TimeshiftBase) => void;
 };
 
 export default function ScheduleTab({
   timeshifts,
+  isReadOnly = false,
   onAddTimeshift,
   onRemoveTimeshift,
 }: ScheduleTabProps) {
@@ -66,6 +68,7 @@ export default function ScheduleTab({
           <ScheduleDay
             key={dayOfWeek}
             dayName={DAYS_OF_WEEK[dayOfWeek]!}
+            isReadOnly={isReadOnly}
             timeshifts={timeshifts.filter(
               (timeshift) => timeshift.dayOfWeek === dayOfWeek,
             )}
@@ -78,16 +81,18 @@ export default function ScheduleTab({
         ))}
       </div>
 
-      <AddTimeshiftModal
-        dayName={modalDay !== null ? DAYS_OF_WEEK[modalDay]! : ""}
-        error={timeshiftError}
-        isOpen={modalDay !== null}
-        onAdd={handleAddTimeshift}
-        onDismissError={() => setTimeshiftError(undefined)}
-        onOpenChange={(open) => {
-          if (!open) closeModal();
-        }}
-      />
+      {!isReadOnly && (
+        <AddTimeshiftModal
+          dayName={modalDay !== null ? DAYS_OF_WEEK[modalDay]! : ""}
+          error={timeshiftError}
+          isOpen={modalDay !== null}
+          onAdd={handleAddTimeshift}
+          onDismissError={() => setTimeshiftError(undefined)}
+          onOpenChange={(open) => {
+            if (!open) closeModal();
+          }}
+        />
+      )}
     </>
   );
 }

@@ -5,6 +5,7 @@ import type { TimeshiftBase } from "@parking-access/schemas";
 type ScheduleDayProps = {
   dayName: string;
   timeshifts: TimeshiftBase[];
+  isReadOnly?: boolean;
   onAdd: () => void;
   onRemove: (timeshift: TimeshiftBase) => void;
 };
@@ -19,6 +20,7 @@ function toMinutes(time?: string | null): number {
 export default function ScheduleDay({
   dayName,
   timeshifts,
+  isReadOnly = false,
   onAdd,
   onRemove,
 }: ScheduleDayProps) {
@@ -37,16 +39,18 @@ export default function ScheduleDay({
         <h3 className="text-sm font-medium">
           {dayName.charAt(0).toUpperCase() + dayName.slice(1)}
         </h3>
-        <Button
-          isIconOnly
-          aria-label={`Añadir franja horaria el ${dayName}`}
-          isDisabled={hasAllDay}
-          size="sm"
-          variant={hasAllDay ? "secondary" : "primary"}
-          onPress={onAdd}
-        >
-          {!hasAllDay && <Icon icon="lucide:plus" />}
-        </Button>
+        {!isReadOnly && (
+          <Button
+            isIconOnly
+            aria-label={`Añadir franja horaria el ${dayName}`}
+            isDisabled={hasAllDay}
+            size="sm"
+            variant={hasAllDay ? "secondary" : "primary"}
+            onPress={onAdd}
+          >
+            {!hasAllDay && <Icon icon="lucide:plus" />}
+          </Button>
+        )}
       </div>
 
       <div className="flex flex-col gap-2 pt-2">
@@ -60,14 +64,16 @@ export default function ScheduleDay({
                   ? "Todo el día"
                   : `${timeshift.startTime} - ${timeshift.endTime}`}
               </Chip.Label>
-              <button
-                aria-label="Eliminar franja"
-                className="cursor-pointer rounded-full bg-white/70 p-0.5 text-accent transition-opacity hover:bg-white"
-                type="button"
-                onClick={() => onRemove(timeshift)}
-              >
-                <Icon icon="lucide:x" />
-              </button>
+              {!isReadOnly && (
+                <button
+                  aria-label="Eliminar franja"
+                  className="cursor-pointer rounded-full bg-white/70 p-0.5 text-accent transition-opacity hover:bg-white"
+                  type="button"
+                  onClick={() => onRemove(timeshift)}
+                >
+                  <Icon icon="lucide:x" />
+                </button>
+              )}
             </Chip>
           ))
         )}

@@ -5,6 +5,7 @@ type PersonalDataTabProps = {
   surname: string;
   telephone: string;
   errors: Record<string, string>;
+  isReadOnly?: boolean;
   onNameChange: (value: string) => void;
   onSurnameChange: (value: string) => void;
   onTelephoneChange: (value: string) => void;
@@ -15,6 +16,7 @@ export default function PersonalDataTab({
   surname,
   telephone,
   errors,
+  isReadOnly = false,
   onNameChange,
   onSurnameChange,
   onTelephoneChange,
@@ -22,6 +24,7 @@ export default function PersonalDataTab({
   return (
     <>
       <TextField
+        isDisabled={isReadOnly}
         isRequired
         isInvalid={!!errors["name"]}
         value={name}
@@ -37,6 +40,7 @@ export default function PersonalDataTab({
       </TextField>
 
       <TextField
+        isDisabled={isReadOnly}
         isRequired
         isInvalid={!!errors["surname"]}
         value={surname}
@@ -52,6 +56,7 @@ export default function PersonalDataTab({
       </TextField>
 
       <TextField
+        isDisabled={isReadOnly}
         isRequired
         isInvalid={!!errors["telephone"]}
         value={telephone}

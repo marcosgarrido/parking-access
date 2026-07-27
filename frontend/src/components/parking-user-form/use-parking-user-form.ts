@@ -37,7 +37,7 @@ function valuesFromUser(user?: ParkingUserResponse): FormValues {
 
 type UseParkingUserFormParams = {
   initialUser?: ParkingUserResponse;
-  mode: "create" | "edit";
+  mode: "create" | "edit" | "view";
 };
 
 export function useParkingUserForm({
