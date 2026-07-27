@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
 import { parkingUserQuery } from "@/api/parking-users";
-import ParkingUserForm from "@/components/parking-user-form";
+import ParkingUserForm from "@/components/parking-user-form/parking-user-form";
 
 export default function EditParkingUserPage() {
   const { id } = useParams();
