@@ -18,12 +18,10 @@ export default function TablePagination({
   onPageChange,
 }: TablePaginationProps) {
   return (
-    <Pagination>
-      <Pagination.Summary>
-        Total {totalCount} {totalLabel}
-      </Pagination.Summary>
+    <Pagination className="grid grid-cols-3 items-center">
+      <div />
       {totalPages > 1 && (
-        <Pagination.Content>
+        <Pagination.Content className="justify-self-center">
           <Pagination.Item>
             <Pagination.Previous
               aria-label="Página anterior"
@@ -60,6 +58,9 @@ export default function TablePagination({
           </Pagination.Item>
         </Pagination.Content>
       )}
+      <Pagination.Summary className="justify-self-end">
+        Total {totalCount} {totalLabel}
+      </Pagination.Summary>
     </Pagination>
   );
 }
