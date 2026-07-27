@@ -54,7 +54,7 @@ export default function VehiclesTab({
           isIconOnly
           aria-label="Añadir matrícula"
           type="button"
-          variant="secondary"
+          variant="primary"
           onPress={onAddPlate}
         >
           <Icon icon="lucide:plus" />

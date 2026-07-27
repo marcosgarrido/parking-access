@@ -19,7 +19,7 @@ export default function ParkingUserForm({
 }: ParkingUserFormProps) {
   const {
     values,
-    errors,
+    personalDataErrors,
     showConfirmExit,
     activeTab,
     plateInput,
@@ -73,7 +73,7 @@ export default function ParkingUserForm({
             <Tabs.ListContainer className="w-fit mx-auto">
               <Tabs.List>
                 <Tabs.Tab
-                  className="gap-2 whitespace-nowrap data-[selected=true]:text-white"
+                  className="gap-2 whitespace-nowrap p-3 data-[selected=true]:text-white"
                   id="personal-data"
                 >
                   <Icon className="size-5" icon="lucide:user-round" />
@@ -81,7 +81,7 @@ export default function ParkingUserForm({
                   <Tabs.Indicator className="bg-accent" />
                 </Tabs.Tab>
                 <Tabs.Tab
-                  className="gap-2 whitespace-nowrap data-[selected=true]:text-white"
+                  className="gap-2 whitespace-nowrap p-3 data-[selected=true]:text-white"
                   id="vehicles"
                 >
                   <Icon className="size-7 pb-0.5" icon="mdi:car" />
@@ -89,7 +89,7 @@ export default function ParkingUserForm({
                   <Tabs.Indicator className="bg-accent" />
                 </Tabs.Tab>
                 <Tabs.Tab
-                  className="gap-2 whitespace-nowrap data-[selected=true]:text-white"
+                  className="gap-2 whitespace-nowrap p-3 data-[selected=true]:text-white"
                   id="schedule"
                 >
                   <Icon className="size-5" icon="lucide:clock" />
@@ -101,7 +101,7 @@ export default function ParkingUserForm({
 
             <Tabs.Panel className="flex flex-col gap-4 pt-4" id="personal-data">
               <PersonalDataTab
-                errors={errors}
+                errors={personalDataErrors}
                 name={values.name}
                 surname={values.surname}
                 telephone={values.telephone}

@@ -47,7 +47,9 @@ export function useParkingUserForm({
 
   const initialValues = valuesFromUser(initialUser);
   const [values, setValues] = useState<FormValues>(initialValues);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [personalDataErrors, setPersonalDataErrors] = useState<
+    Record<string, string>
+  >({});
   const [showConfirmExit, setShowConfirmExit] = useState(false);
   const [activeTab, setActiveTab] = useState("personal-data");
   const [plateInput, setPlateInput] = useState("");
@@ -106,7 +108,7 @@ export function useParkingUserForm({
 
         if (!fieldErrors[key]) fieldErrors[key] = issue.message;
       }
-      setErrors(fieldErrors);
+      setPersonalDataErrors(fieldErrors);
       setActiveTab("personal-data");
 
       return;
@@ -119,7 +121,9 @@ export function useParkingUserForm({
     <K extends keyof FormValues>(key: K) =>
     (value: FormValues[K]) => {
       setValues((prev) => ({ ...prev, [key]: value }));
-      setErrors((prev) => (prev[key] ? { ...prev, [key]: "" } : prev));
+      setPersonalDataErrors((prev) =>
+        prev[key] ? { ...prev, [key]: "" } : prev,
+      );
       if (mutation.isError) mutation.reset();
     };
 
@@ -160,7 +164,7 @@ export function useParkingUserForm({
 
   const handleTabChange = (key: React.Key) => {
     setActiveTab(String(key));
-    setErrors({});
+    setPersonalDataErrors({});
     setPlateError(undefined);
   };
 
@@ -171,7 +175,7 @@ export function useParkingUserForm({
 
   return {
     values,
-    errors,
+    personalDataErrors,
     showConfirmExit,
     activeTab,
     plateInput,
