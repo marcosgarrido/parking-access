@@ -77,7 +77,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex pt-30 w-full items-center justify-center bg-background">
-      <Surface className="flex w-full max-w-md flex-col gap-6 p-8">
+      <Surface className="flex w-full max-w-sm flex-col gap-6 p-8">
         <LogoIcon className="mx-auto" />
         <Form
           className="flex flex-col pt-4 gap-4"
