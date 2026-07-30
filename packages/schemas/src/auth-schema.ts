@@ -47,7 +47,6 @@ export const AppUserSessionSchema = z.object({
 
 export const LoginResponseSchema = z.object({
   user: AppUserSessionSchema,
-  sessionExpiresAt: z.number().int(),
 });
 
 export type LoginBody = z.infer<typeof LoginBodySchema>;

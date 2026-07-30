@@ -6,7 +6,7 @@ import {
 } from "@parking-access/schemas";
 import jwt from "jsonwebtoken";
 
-export const ACCESS_TOKEN_TTL_MS = 1000 * 60 * 60;
+export const ACCESS_TOKEN_TTL_MS = 1000 * 60 * 15;
 const ACCESS_TOKEN_TTL_S = Math.floor(ACCESS_TOKEN_TTL_MS / 1000);
 export const CSRF_TOKEN_TTL_MS = ACCESS_TOKEN_TTL_MS;
 

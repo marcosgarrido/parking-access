@@ -31,11 +31,10 @@ export default function LoginPage() {
   const mutation = useMutation<LoginResponse, Error, LoginBody>({
     mutationFn: (data) => login(data.username, data.password),
 
-    onSuccess: async (data) => {
+    onSuccess: async () => {
       try {
         const me = await fetchMe();
 
-        localStorage.setItem("sessionExpiresAt", String(data.sessionExpiresAt));
         setUser(me);
         navigate("/access", { replace: true });
       } catch {

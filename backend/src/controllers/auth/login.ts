@@ -65,6 +65,5 @@ export async function login(req: Request, res: Response): Promise<void> {
       name: user.name,
       surname: user.surname,
     },
-    sessionExpiresAt: Date.now() + ACCESS_TOKEN_TTL_MS,
   });
 }
