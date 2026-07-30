@@ -7,6 +7,7 @@ import appUsersRoutes from "@/routes/app-users-routes";
 import authRoutes from "@/routes/auth-routes";
 import parkingUsersRoutes from "@/routes/parking-users-routes";
 import recordsRoutes from "@/routes/records-routes";
+import { initializeMqttClient } from "@/services/mqtt/mqtt-client";
 
 const app = express();
 const port = 4000;
@@ -33,3 +34,5 @@ app.use(errorHandler);
 app.listen(port, () => {
   console.log(`Servidor escuchando en el puerto ${port}`);
 });
+
+initializeMqttClient();
