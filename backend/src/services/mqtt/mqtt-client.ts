@@ -1,5 +1,6 @@
 import mqtt, { type MqttClient } from "mqtt";
 
+import { handleIncomingCall } from "@/services/mqtt/mqtt-handlers";
 import { MQTT_SUBSCRIBE_TOPICS } from "@/services/mqtt/mqtt-topics";
 import { WS_EVENTS } from "@/services/ws/ws-events";
 import { broadcastToClients } from "@/services/ws/ws-server";
@@ -62,7 +63,7 @@ export function initializeMqttClient() {
         broadcastToClients(WS_EVENTS.DOOR_EVENT, payload);
         break;
       case MQTT_SUBSCRIBE_TOPICS.INCOMING_CALL:
-        console.log(`Mensaje recibido en ${topic}: ${payload}`);
+        handleIncomingCall(payload);
         break;
       default:
         console.warn(`Tópico no manejado: ${topic}`);
