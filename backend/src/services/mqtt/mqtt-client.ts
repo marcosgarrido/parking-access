@@ -1,6 +1,8 @@
 import mqtt, { type MqttClient } from "mqtt";
 
 import { MQTT_SUBSCRIBE_TOPICS } from "@/services/mqtt/mqtt-topics";
+import { WS_EVENTS } from "@/services/ws/ws-events";
+import { broadcastToClients } from "@/services/ws/ws-server";
 
 let client: MqttClient;
 
@@ -44,7 +46,28 @@ export function initializeMqttClient() {
   });
 
   client.on("message", (topic, message) => {
-    console.log(`Mensaje recibido en ${topic}: ${message.toString()}`);
+    const payload = message.toString();
+
+    switch (topic) {
+      case MQTT_SUBSCRIBE_TOPICS.DOOR_STATE:
+        broadcastToClients(WS_EVENTS.DOOR_STATE, payload, true);
+        break;
+      case MQTT_SUBSCRIBE_TOPICS.DOOR_AVAILABILITY:
+        broadcastToClients(WS_EVENTS.DOOR_AVAILABILITY, payload, true);
+        break;
+      case MQTT_SUBSCRIBE_TOPICS.GSM_AVAILABILITY:
+        broadcastToClients(WS_EVENTS.GSM_AVAILABILITY, payload, true);
+        break;
+      case MQTT_SUBSCRIBE_TOPICS.DOOR_EVENT:
+        broadcastToClients(WS_EVENTS.DOOR_EVENT, payload);
+        break;
+      case MQTT_SUBSCRIBE_TOPICS.INCOMING_CALL:
+        console.log(`Mensaje recibido en ${topic}: ${payload}`);
+        break;
+      default:
+        console.warn(`Tópico no manejado: ${topic}`);
+        break;
+    }
   });
 
   client.on("error", (err) => {

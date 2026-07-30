@@ -11,6 +11,10 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": "http://backend:4000",
+      "/ws": {
+        target: "http://backend:4000",
+        ws: true,
+      },
     },
   },
 });
