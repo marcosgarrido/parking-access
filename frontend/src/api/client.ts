@@ -23,9 +23,18 @@ export async function apiFetch(input: RequestInfo, init: RequestInit = {}) {
 
   if (res.status === 204) return null;
 
-  const data = await res.json().catch(() => ({
-    message: "No se pudo conectar con el servidor. Inténtalo de nuevo.",
-  }));
+  const data = await res.json().catch((err) => {
+    console.error(
+      "Fallo al parsear respuesta del servidor:",
+      err,
+      res.status,
+      res.url,
+    );
+
+    return {
+      message: "No se pudo conectar con el servidor. Inténtalo de nuevo.",
+    };
+  });
 
   if (!res.ok) {
     const err = new Error(data?.message || `HTTP ${res.status}`) as Error & {
