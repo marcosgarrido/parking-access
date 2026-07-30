@@ -70,6 +70,8 @@ model Timeshift {
   allDay        Boolean     @default(false)
   parkingUserId Int
   parkingUser   ParkingUser @relation(fields: [parkingUserId], references: [id], onDelete: Cascade)
+
+  @@index([parkingUserId])
 }
 
 model Record {
@@ -84,4 +86,7 @@ model Record {
   parkingUserSurname String?
   parkingUser        ParkingUser? @relation(fields: [parkingUserId], references: [id])
   vehicle            Vehicle?     @relation(fields: [vehicleId], references: [id])
+
+  @@index([parkingUserId])
+  @@index([time])
 }
