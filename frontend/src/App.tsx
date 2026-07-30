@@ -1,6 +1,11 @@
 import { Toast } from "@heroui/react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+  RouterProvider,
+} from "react-router-dom";
 
 import { AppProvider } from "@/app-provider";
 import DefaultLayout from "@/layouts/default-layout";
@@ -13,7 +18,6 @@ import DeleteParkingUsersPage from "@/pages/delete-parking-users";
 import DeleteRecordsPage from "@/pages/delete-records";
 import EditAppUserPage from "@/pages/edit-app-user";
 import EditParkingUserPage from "@/pages/edit-parking-user";
-import HomePage from "@/pages/home";
 import LoginPage from "@/pages/login";
 import NewAppUserPage from "@/pages/new-app-user";
 import NewParkingUserPage from "@/pages/new-parking-user";
@@ -36,7 +40,7 @@ const router = createBrowserRouter([
         path: "",
         element: <DefaultLayout />,
         children: [
-          { index: true, element: <HomePage /> },
+          { index: true, element: <Navigate replace to="/access" /> },
           { path: "access", element: <AccessPage /> },
           {
             path: "records",
