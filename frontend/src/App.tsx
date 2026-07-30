@@ -25,6 +25,7 @@ import ParkingUsersPage from "@/pages/parking-users";
 import RecordsPage from "@/pages/records";
 import ViewParkingUserPage from "@/pages/view-parking-user";
 import { queryClient } from "@/query-client";
+import { initializeWebSocketClient } from "@/services/ws/ws-client";
 
 const router = createBrowserRouter([
   {
@@ -91,6 +92,8 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
+initializeWebSocketClient();
 
 function App() {
   return (
