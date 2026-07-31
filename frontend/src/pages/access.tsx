@@ -46,8 +46,8 @@ export default function AccessPage() {
     const socket = getSocket();
 
     const onDisconnect = () => {
-      setDoorOpenerOnline(null);
-      setCallReceiverOnline(null);
+      setDoorOpenerOnline(false);
+      setCallReceiverOnline(false);
       setWaitingDoorHoldAck(false);
     };
 
@@ -62,7 +62,7 @@ export default function AccessPage() {
     const timeout = setTimeout(() => {
       setDoorOpenerOnline((prev) => (prev === null ? false : prev));
       setCallReceiverOnline((prev) => (prev === null ? false : prev));
-    }, 2000);
+    }, 300);
 
     return () => clearTimeout(timeout);
   }, []);
