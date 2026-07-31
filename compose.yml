@@ -1,7 +1,9 @@
+name: parking-access
+
 services:
   mediamtx:
     image: bluenviron/mediamtx:latest
-    container_name: parking-access-new-mediamtx
+    container_name: parking-access-mediamtx
     env_file:
       - ./mediamtx/.env
     ports:
@@ -11,7 +13,7 @@ services:
 
   mosquitto:
     image: eclipse-mosquitto:2.0
-    container_name: parking-access-new-mosquitto
+    container_name: parking-access-mosquitto
     env_file:
       - ./mosquitto/.env
     volumes:
@@ -24,7 +26,7 @@ services:
 
   database:
     image: postgres:18.4
-    container_name: parking-access-new-db
+    container_name: parking-access-db
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -43,7 +45,7 @@ services:
     build:
       context: .
       dockerfile: backend/Dockerfile
-    container_name: parking-access-new-backend
+    container_name: parking-access-backend
     env_file:
       - ./backend/.env
     environment:
@@ -63,7 +65,7 @@ services:
     build:
       context: .
       dockerfile: frontend/Dockerfile
-    container_name: parking-access-new-frontend
+    container_name: parking-access-frontend
     volumes:
       - ./frontend:/app/frontend
       - ./packages:/app/packages
