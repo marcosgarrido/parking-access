@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 
 import {
   ACCESS_TOKEN_TTL_MS,
+  CSRF_TOKEN_TTL_MS,
   generateAccessToken,
   verifyAccessToken,
 } from "@/auth/tokens";
@@ -49,6 +50,16 @@ export async function requireAuth(
       path: "/",
       maxAge: ACCESS_TOKEN_TTL_MS,
     });
+
+    if (req.cookies?.csrf) {
+      res.cookie("csrf", req.cookies.csrf, {
+        httpOnly: false,
+        secure: req.secure,
+        sameSite: "lax",
+        path: "/",
+        maxAge: CSRF_TOKEN_TTL_MS,
+      });
+    }
   }
 
   res.locals.user = { ...payload, role: user.role };
