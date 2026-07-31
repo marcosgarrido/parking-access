@@ -1,11 +1,14 @@
 import { RouterProvider } from "@heroui/react";
 import type { AppUserSession } from "@parking-access/schemas";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import type { NavigateOptions } from "react-router-dom";
 import { useHref, useLocation, useNavigate } from "react-router-dom";
 
 import { fetchMe } from "@/api/auth";
+import { WS_EVENTS } from "@/constants/ws-events";
 import { AuthContext } from "@/hooks/use-auth";
+import { useSocketSubscribe } from "@/hooks/use-socket-subscribe";
 
 declare module "@react-types/shared" {
   interface RouterConfig {
@@ -16,8 +19,13 @@ declare module "@react-types/shared" {
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const queryClient = useQueryClient();
   const [user, setUser] = useState<AppUserSession | null>(null);
   const [loading, setLoading] = useState(true);
+
+  useSocketSubscribe(WS_EVENTS.NEW_RECORD, () => {
+    queryClient.invalidateQueries({ queryKey: ["records"] });
+  });
 
   useEffect(() => {
     let mounted = true;
