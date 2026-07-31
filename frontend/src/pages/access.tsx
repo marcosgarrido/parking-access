@@ -1,8 +1,9 @@
-import { Button, Chip, Switch, Toast } from "@heroui/react";
+import { Button, Chip, Surface, Switch, Toast } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 
 import { holdDoor, openDoor } from "@/api/door";
+import WebRTCPlayer from "@/components/webrtc-player";
 import { WS_EVENTS } from "@/constants/ws-events";
 import { useSocketSubscribe } from "@/hooks/use-socket-subscribe";
 import { getSocket } from "@/services/ws/ws-client";
@@ -90,7 +91,7 @@ export default function AccessPage() {
 
   return (
     <section className="flex justify-center w-full">
-      <div className="flex flex-col items-center gap-3 w-full max-w-5xl">
+      <div className="flex flex-col items-center gap-3 w-full">
         <div className="flex w-full gap-4 items-center">
           <Button
             variant="primary"
@@ -128,6 +129,10 @@ export default function AccessPage() {
             )}
           </div>
         </div>
+
+        <Surface className="w-full aspect-video p-4">
+          <WebRTCPlayer src="/camera/whep" />
+        </Surface>
       </div>
     </section>
   );

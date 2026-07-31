@@ -5,12 +5,14 @@ type DelayedSpinnerOverlayProps = {
   show: boolean;
   delay?: number;
   className?: string;
+  fullScreen?: boolean;
 } & SpinnerRootProps;
 
 export function DelayedSpinnerOverlay({
   show,
   delay = 250,
   className = "",
+  fullScreen = true,
   ...spinnerProps
 }: DelayedSpinnerOverlayProps) {
   const [visible, setVisible] = useState(false);
@@ -33,7 +35,7 @@ export function DelayedSpinnerOverlay({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center backdrop-grayscale backdrop-brightness-50 ${className}`}
+      className={`${fullScreen ? "fixed" : "absolute"} inset-0 z-50 flex items-center justify-center backdrop-grayscale backdrop-brightness-50 ${className}`}
     >
       <Spinner {...spinnerProps} className="-translate-y-10" />
     </div>

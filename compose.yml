@@ -1,4 +1,14 @@
 services:
+  mediamtx:
+    image: bluenviron/mediamtx:latest
+    container_name: parking-access-new-mediamtx
+    env_file:
+      - ./mediamtx/.env
+    ports:
+      - "8554:8554"
+      - "8189:8189/udp"
+    restart: unless-stopped
+
   mosquitto:
     image: eclipse-mosquitto:2.0
     container_name: parking-access-new-mosquitto

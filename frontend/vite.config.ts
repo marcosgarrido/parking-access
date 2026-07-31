@@ -15,6 +15,7 @@ export default defineConfig({
         target: "http://backend:4000",
         ws: true,
       },
+      "/camera": "http://mediamtx:8889",
     },
   },
 });
