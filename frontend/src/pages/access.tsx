@@ -33,7 +33,13 @@ export default function AccessPage() {
   });
 
   useSocketSubscribe(WS_EVENTS.DOOR_STATE, (message) => {
-    setDoorHoldEnabled(message.trim().toUpperCase() === "ON");
+    const on = message.trim().toUpperCase() === "ON";
+
+    if (waitingDoorHoldAck) {
+      Toast.toast(on ? "Retención activada" : "Retención desactivada");
+    }
+
+    setDoorHoldEnabled(on);
     setWaitingDoorHoldAck(false);
   });
 
@@ -86,8 +92,11 @@ export default function AccessPage() {
     setWaitingDoorHoldAck(true);
     try {
       await holdDoor(isSelected);
-    } catch {
+    } catch (err) {
       setWaitingDoorHoldAck(false);
+      if ((err as { status?: number }).status !== 401) {
+        Toast.toast.danger("No se pudo cambiar el modo de retención");
+      }
     }
   };
 
