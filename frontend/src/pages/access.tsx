@@ -1,6 +1,6 @@
 import { Button, Chip, Surface, Switch, Toast } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { holdDoor, openDoor } from "@/api/door";
 import WebRTCPlayer from "@/components/webrtc-player";
@@ -17,14 +17,19 @@ export default function AccessPage() {
     null,
   );
   const [waitingDoorHoldAck, setWaitingDoorHoldAck] = useState(false);
+  const wasDoorOpenerOnline = useRef<boolean | null>(null);
 
   useSocketSubscribe(WS_EVENTS.DOOR_AVAILABILITY, (message) => {
     const online = message.trim().toUpperCase() === "ONLINE";
+    const justCameOnline = online && wasDoorOpenerOnline.current === false;
 
+    wasDoorOpenerOnline.current = online;
     setDoorOpenerOnline(online);
     if (!online) {
       setDoorHoldEnabled(false);
       setWaitingDoorHoldAck(false);
+    } else if (justCameOnline) {
+      getSocket().emit("request-state");
     }
   });
 
