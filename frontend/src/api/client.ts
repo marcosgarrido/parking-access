@@ -1,3 +1,10 @@
+let onUnauthorized: (() => void) | null = null;
+let handlingUnauthorized = false;
+
+export function setUnauthorizedHandler(handler: () => void) {
+  onUnauthorized = handler;
+}
+
 export async function apiFetch(input: RequestInfo, init: RequestInit = {}) {
   const method = (init.method || "GET").toUpperCase();
   const headers = new Headers(init.headers);
@@ -21,6 +28,8 @@ export async function apiFetch(input: RequestInfo, init: RequestInit = {}) {
 
   const res = await fetch(input, { ...init, credentials: "include", headers });
 
+  if (res.ok) handlingUnauthorized = false;
+
   if (res.status === 204) return null;
 
   const data = await res.json().catch((err) => {
@@ -37,6 +46,11 @@ export async function apiFetch(input: RequestInfo, init: RequestInit = {}) {
   });
 
   if (!res.ok) {
+    if (res.status === 401 && !handlingUnauthorized) {
+      handlingUnauthorized = true;
+      onUnauthorized?.();
+    }
+
     const err = new Error(data?.message || `HTTP ${res.status}`) as Error & {
       status?: number;
       data?: unknown;

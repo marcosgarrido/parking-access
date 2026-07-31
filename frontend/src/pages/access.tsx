@@ -73,8 +73,10 @@ export default function AccessPage() {
 
     try {
       await openDoor();
-    } catch {
-      Toast.toast.danger("No se pudo abrir la puerta");
+    } catch (err) {
+      if ((err as { status?: number }).status !== 401) {
+        Toast.toast.danger("No se pudo abrir la puerta");
+      }
     }
   };
 
