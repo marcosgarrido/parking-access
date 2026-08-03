@@ -1,5 +1,7 @@
 import cookieParser from "cookie-parser";
 import express from "express";
+import fs from "fs";
+import path from "path";
 
 import { prisma } from "@/database";
 import { errorHandler } from "@/middlewares/error-handler";
@@ -17,20 +19,20 @@ const port = 4000;
 app.use(express.json());
 app.use(cookieParser());
 
-app.get("/api/health", async (_req, res) => {
-  try {
-    await prisma.$queryRaw`SELECT 1`;
-    res.json({ ok: true, database: "connected" });
-  } catch (_error) {
-    res.status(500).json({ ok: false, database: "unreachable" });
-  }
-});
-
 app.use("/api/auth", authRoutes);
 app.use("/api/door", doorRoutes);
 app.use("/api/parking-users", parkingUsersRoutes);
 app.use("/api/records", recordsRoutes);
 app.use("/api/app-users", appUsersRoutes);
+
+const frontendDist = path.join(process.cwd(), "../frontend/dist");
+
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  app.use((_req, res) => {
+    res.sendFile(path.join(frontendDist, "index.html"));
+  });
+}
 
 app.use(errorHandler);
 
