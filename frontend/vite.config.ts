@@ -9,6 +9,7 @@ export default defineConfig({
   },
   plugins: [react(), tailwindcss()],
   server: {
+    allowedHosts: true,
     proxy: {
       "/api": "http://backend:4000",
       "/ws": {
