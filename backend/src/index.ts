@@ -1,6 +1,7 @@
 import cookieParser from "cookie-parser";
 import express from "express";
 import fs from "fs";
+import { createProxyMiddleware } from "http-proxy-middleware";
 import path from "path";
 
 import { errorHandler } from "@/middlewares/error-handler";
@@ -23,6 +24,14 @@ app.use("/api/door", doorRoutes);
 app.use("/api/parking-users", parkingUsersRoutes);
 app.use("/api/records", recordsRoutes);
 app.use("/api/app-users", appUsersRoutes);
+
+app.use(
+  createProxyMiddleware({
+    target: "http://mediamtx:8889",
+    changeOrigin: true,
+    pathFilter: "/camera",
+  }),
+);
 
 const frontendDist = path.join(process.cwd(), "../frontend/dist");
 

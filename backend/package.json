@@ -33,6 +33,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-rate-limit": "^8.6.1",
+    "http-proxy-middleware": "^4.2.0",
     "jsonwebtoken": "^9.0.3",
     "mqtt": "^5.15.2",
     "prisma": "^7.9.0",
