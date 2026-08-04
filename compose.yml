@@ -39,11 +39,11 @@ services:
       timeout: 5s
       retries: 5
 
-  backend:
+  server:
     build:
       context: .
       dockerfile: backend/Dockerfile
-    container_name: parking-access-backend
+    container_name: parking-access-server
     env_file:
       - .env
     environment:
