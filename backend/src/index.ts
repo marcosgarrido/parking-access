@@ -3,7 +3,6 @@ import express from "express";
 import fs from "fs";
 import path from "path";
 
-import { prisma } from "@/database";
 import { errorHandler } from "@/middlewares/error-handler";
 import appUsersRoutes from "@/routes/app-users-routes";
 import authRoutes from "@/routes/auth-routes";
