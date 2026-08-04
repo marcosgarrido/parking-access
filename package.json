@@ -17,7 +17,9 @@
   ],
   "allowScripts": {
     "prisma": true,
-    "@prisma/engines": true
+    "@prisma/engines": true,
+    "esbuild": true,
+    "fsevents": true
   },
   "devDependencies": {
     "eslint": "^10.7.0",
