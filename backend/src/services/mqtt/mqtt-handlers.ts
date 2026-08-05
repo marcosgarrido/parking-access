@@ -54,6 +54,7 @@ function isInTime(timeshifts: ParkingUserTimeshiftList): boolean {
 }
 
 export async function handleIncomingCall(phoneNumber: string) {
+  const startTime = Date.now();
   console.log(`[${nowString()}] Llamada recibida de: ${phoneNumber}`);
 
   try {
@@ -182,7 +183,9 @@ export async function handleIncomingCall(phoneNumber: string) {
       vehiclePlate: matchedVehicle.plate,
       success: true,
     });
-    console.log(`[${nowString()}] Acceso concedido: Puerta abierta`);
+    console.log(
+      `[${nowString()}] Acceso concedido: Puerta abierta (${Date.now() - startTime} ms)`,
+    );
   } catch (error) {
     console.error(
       `[${nowString()}] Error procesando llamada de ${phoneNumber}:`,
