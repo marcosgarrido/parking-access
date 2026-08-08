@@ -1,3 +1,15 @@
+export class ApiError extends Error {
+  status: number;
+  data?: unknown;
+
+  constructor(message: string, status: number, data?: unknown) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+    this.data = data;
+  }
+}
+
 let onUnauthorized: (() => void) | null = null;
 let handlingUnauthorized = false;
 
@@ -51,14 +63,7 @@ export async function apiFetch(input: RequestInfo, init: RequestInit = {}) {
       onUnauthorized?.();
     }
 
-    const err = new Error(data?.message || `HTTP ${res.status}`) as Error & {
-      status?: number;
-      data?: unknown;
-    };
-
-    err.status = res.status;
-    err.data = data;
-    throw err;
+    throw new ApiError(data?.message || `HTTP ${res.status}`, res.status, data);
   }
 
   return data;

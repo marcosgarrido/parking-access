@@ -2,6 +2,7 @@ import { Button, Chip, Surface, Switch, Toast } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useEffect, useRef, useState } from "react";
 
+import { ApiError } from "@/api/client";
 import { holdDoor, openDoor } from "@/api/door";
 import WebRTCPlayer from "@/components/webrtc-player";
 import { WS_EVENTS } from "@/constants/ws-events";
@@ -85,7 +86,7 @@ export default function AccessPage() {
     try {
       await openDoor();
     } catch (err) {
-      if ((err as { status?: number }).status !== 401) {
+      if (!(err instanceof ApiError) || err.status !== 401) {
         Toast.toast.danger("No se pudo abrir la puerta");
       }
     }
@@ -99,7 +100,7 @@ export default function AccessPage() {
       await holdDoor(isSelected);
     } catch (err) {
       setWaitingDoorHoldAck(false);
-      if ((err as { status?: number }).status !== 401) {
+      if (!(err instanceof ApiError) || err.status !== 401) {
         Toast.toast.danger("No se pudo cambiar el modo de retención");
       }
     }
