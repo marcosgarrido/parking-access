@@ -65,7 +65,7 @@ export default function RecordsPage() {
     setSelectedKeys(new Set());
   }
 
-  if (isLoading) return <p>Cargando...</p>;
+  if (isLoading) return null;
 
   const handleSortChange = (descriptor: SortDescriptor) => {
     setSort(descriptor);
