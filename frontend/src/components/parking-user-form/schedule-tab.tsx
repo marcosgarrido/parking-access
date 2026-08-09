@@ -4,8 +4,8 @@ import { useState } from "react";
 
 import { DAYS_OF_WEEK } from "@/constants/days-of-week";
 import AddTimeshiftModal from "@/modals/add-timeshift-modal";
-import { normalizeTimeshifts } from "@/utils/normalize-timeshifts";
 
+import { normalizeTimeshifts } from "./normalize-timeshifts";
 import ScheduleDay from "./schedule-day";
 
 const DAY_ORDER = [1, 2, 3, 4, 5, 6, 0];

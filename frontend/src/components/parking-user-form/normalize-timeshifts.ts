@@ -7,6 +7,34 @@ function toMinutes(time?: string | null): number {
   return (hours ?? 0) * 60 + (minutes ?? 0);
 }
 
+function coversFullDay(normalShifts: TimeshiftBase[]): boolean {
+  const sorted = normalShifts
+    .map((shift) => ({
+      start: toMinutes(shift.startTime),
+      end: shift.endTime === "00:00" ? 1440 : toMinutes(shift.endTime),
+    }))
+    .sort((a, b) => a.start - b.start);
+
+  let covered = 0;
+  let blockStart = sorted[0].start;
+  let blockEnd = sorted[0].end;
+
+  for (let i = 1; i < sorted.length; i++) {
+    const curr = sorted[i];
+
+    if (curr.start > blockEnd) {
+      covered += blockEnd - blockStart;
+      blockStart = curr.start;
+      blockEnd = curr.end;
+    } else {
+      blockEnd = Math.max(blockEnd, curr.end);
+    }
+  }
+  covered += blockEnd - blockStart;
+
+  return covered >= 1440;
+}
+
 /**
  * Normaliza una lista de franjas horarias por día, para que:
  * - Si hay una franja "todo el día" para un día, solo se guarda esa.
@@ -37,31 +65,7 @@ export function normalizeTimeshifts(
 
     if (normalShifts.length === 0) continue;
 
-    const intervals = normalShifts
-      .map((shift) => ({
-        start: toMinutes(shift.startTime),
-        end: shift.endTime === "00:00" ? 1440 : toMinutes(shift.endTime),
-      }))
-      .sort((a, b) => a.start - b.start);
-
-    let totalCovered = 0;
-    let prevStart = intervals[0]!.start;
-    let prevEnd = intervals[0]!.end;
-
-    for (let i = 1; i < intervals.length; i++) {
-      const { start, end } = intervals[i]!;
-
-      if (start > prevEnd) {
-        totalCovered += prevEnd - prevStart;
-        prevStart = start;
-        prevEnd = end;
-      } else {
-        prevEnd = Math.max(prevEnd, end);
-      }
-    }
-    totalCovered += prevEnd - prevStart;
-
-    if (totalCovered >= 1440) {
+    if (coversFullDay(normalShifts)) {
       result.push({ dayOfWeek, allDay: true });
     } else {
       result.push(
