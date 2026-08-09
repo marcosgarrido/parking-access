@@ -35,24 +35,18 @@ function coversFullDay(normalShifts: TimeshiftBase[]): boolean {
   return covered >= 1440;
 }
 
-/**
- * Normaliza una lista de franjas horarias por día, para que:
- * - Si hay una franja "todo el día" para un día, solo se guarda esa.
- * - Si varias franjas normales cubren el día completo entre todas, se fusionan en una "todo el día".
- * - Si no, se dejan las franjas normales tal cual.
- */
 export function normalizeTimeshifts(
   timeshifts: TimeshiftBase[],
 ): TimeshiftBase[] {
-  const grouped: Record<number, TimeshiftBase[]> = {};
+  const groupedByDay: Record<number, TimeshiftBase[]> = {};
 
   for (const timeshift of timeshifts) {
-    (grouped[timeshift.dayOfWeek] ??= []).push(timeshift);
+    (groupedByDay[timeshift.dayOfWeek] ??= []).push(timeshift);
   }
 
   const result: TimeshiftBase[] = [];
 
-  for (const [day, shifts] of Object.entries(grouped)) {
+  for (const [day, shifts] of Object.entries(groupedByDay)) {
     const dayOfWeek = Number(day);
     const allDayShifts = shifts.filter((shift) => shift.allDay);
 

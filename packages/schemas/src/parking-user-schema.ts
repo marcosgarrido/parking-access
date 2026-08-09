@@ -15,7 +15,9 @@ function capitalize(value: string): string {
     .join(" ");
 }
 
-function toMinutes(timeString: string): number {
+function toMinutes(timeString?: string | null): number {
+  if (!timeString) return 0;
+
   const [hoursPart, minutesPart] = timeString.split(":");
 
   return Number(hoursPart ?? 0) * 60 + Number(minutesPart ?? 0);
@@ -35,6 +37,7 @@ const SurnameSchema = z
   .max(50, "Los apellidos no pueden tener más de 50 caracteres en total")
   .transform(capitalize);
 
+// Aceptamos provisionalmente números que empiecen por 4 y 9, para realizar pruebas.
 const TelephoneSchema = z
   .string()
   .trim()
@@ -64,60 +67,57 @@ const VehicleListSchema = z
 
 export const ParkingUserTimeshiftListSchema = z
   .array(TimeshiftBodySchema)
-  .superRefine((shifts, ctx) => {
-    const groupedByDay = shifts.reduce(
-      (acc, shift, idx) => {
-        const day = (acc[shift.dayOfWeek] ??= []);
+  .superRefine((timeshifts, ctx) => {
+    const groupedByDay: Record<
+      number,
+      (z.infer<typeof TimeshiftBaseSchema> & { __idx: number })[]
+    > = {};
 
-        day.push({ ...shift, __idx: idx });
+    for (const [idx, timeshift] of timeshifts.entries()) {
+      (groupedByDay[timeshift.dayOfWeek] ??= []).push({
+        ...timeshift,
+        __idx: idx,
+      });
+    }
 
-        return acc;
-      },
-      {} as Record<
-        number,
-        (z.infer<typeof TimeshiftBaseSchema> & { __idx: number })[]
-      >,
-    );
-
-    for (const times of Object.values(groupedByDay)) {
-      const allDayShifts = times.filter((t) => t.allDay);
-      const normalShifts = times.filter((t) => !t.allDay);
+    for (const dayShifts of Object.values(groupedByDay)) {
+      const allDayShifts = dayShifts.filter((shift) => shift.allDay);
+      const normalShifts = dayShifts.filter((shift) => !shift.allDay);
 
       if (allDayShifts.length > 1) {
-        for (const t of allDayShifts) {
+        for (const shift of allDayShifts) {
           ctx.addIssue({
             code: "custom",
             message: "Solo puede haber una franja 'todo el día' por día.",
-            path: [t.__idx, "timeshift"],
+            path: [shift.__idx, "timeshift"],
           });
         }
       }
+
       if (allDayShifts.length > 0 && normalShifts.length > 0) {
-        for (const t of times) {
+        for (const shift of dayShifts) {
           ctx.addIssue({
             code: "custom",
             message:
               "No puedes mezclar una franja 'todo el día' y otras franjas el mismo día.",
-            path: [t.__idx, "timeshift"],
+            path: [shift.__idx, "timeshift"],
           });
         }
       }
 
       if (normalShifts.length > 1) {
         const sorted = normalShifts
-          .filter((ts) => ts.startTime && ts.endTime)
-          .map((ts) => ({
-            ...ts,
-            start: toMinutes(ts.startTime!),
-            end: ts.endTime === "00:00" ? 1440 : toMinutes(ts.endTime!),
+          .filter((shift) => shift.startTime && shift.endTime)
+          .map((shift) => ({
+            ...shift,
+            start: toMinutes(shift.startTime),
+            end: shift.endTime === "00:00" ? 1440 : toMinutes(shift.endTime),
           }))
           .sort((a, b) => a.start - b.start);
 
         for (let i = 1; i < sorted.length; i++) {
-          const prev = sorted[i - 1];
-          const curr = sorted[i];
-
-          if (!prev || !curr) continue;
+          const prev = sorted[i - 1]!;
+          const curr = sorted[i]!;
 
           if (curr.start < prev.end) {
             ctx.addIssue({
