@@ -10,6 +10,7 @@ router.use(
   createProxyMiddleware({
     target: "http://mediamtx:8889",
     changeOrigin: true,
+    pathRewrite: (path) => `/camera${path}`,
   }),
 );
 
