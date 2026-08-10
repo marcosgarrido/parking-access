@@ -1,4 +1,8 @@
-import { IdSchema, ParkingUserBaseSchema, VehicleListSchema } from "@parking-access/schemas";
+import {
+  IdSchema,
+  ParkingUserBaseSchema,
+  VehicleListSchema,
+} from "@parking-access/schemas";
 import { z } from "zod";
 
 import { TimeshiftResponseSchema } from "./timeshift-schema";
