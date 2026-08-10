@@ -15,7 +15,6 @@ import { Icon } from "@iconify/react";
 import type {
   AppRole,
   AppUserCreateBody,
-  AppUserResponse,
   AppUserUpdateBody,
 } from "@parking-access/schemas";
 import {
@@ -30,6 +29,7 @@ import { createAppUser, updateAppUser } from "@/api/app-users";
 import { ROLE_LABELS } from "@/constants/roles";
 import { useUnsavedChangesBlocker } from "@/hooks/use-unsaved-changes-blocker";
 import ConfirmExitModal from "@/modals/confirm-exit-modal";
+import type { AppUserResponse } from "@/schemas/app-user-schema";
 
 const ROLES: AppRole[] = ["ADMIN", "MANAGER", "SUPERVISOR"];
 

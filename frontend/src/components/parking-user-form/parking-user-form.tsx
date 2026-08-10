@@ -1,8 +1,8 @@
 import { Button, Form, Surface, Switch, Tabs } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import type { ParkingUserResponse } from "@parking-access/schemas";
 
 import ConfirmExitModal from "@/modals/confirm-exit-modal";
+import type { ParkingUserResponse } from "@/schemas/parking-user-schema";
 
 import PersonalDataTab from "./personal-data-tab";
 import ScheduleTab from "./schedule-tab";

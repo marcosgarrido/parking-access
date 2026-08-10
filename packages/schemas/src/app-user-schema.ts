@@ -58,7 +58,7 @@ export const AppUserDeleteManyBodySchema = z.object({
   ids: z.array(IdSchema).min(1, "Debe proporcionar algún ID de usuario"),
 });
 
-export const AppUserQuerySchema = z
+export const AppUserListQuerySchema = z
   .object({
     search: z.string(),
     page: z.coerce.number().min(1),
@@ -68,30 +68,8 @@ export const AppUserQuerySchema = z
   })
   .partial();
 
-export const AppUserResponseSchema = z.object({
-  id: IdSchema,
-  ...AppUserBaseSchema.shape,
-  lastLoginAt: z.iso.datetime().nullable().optional(),
-  createdAt: z.iso.datetime(),
-  updatedAt: z.iso.datetime(),
-});
-
-const MetaSchema = z.object({
-  page: z.number().int().positive().optional(),
-  pageSize: z.number().int().positive().optional(),
-  totalPages: z.number().int().nonnegative().optional(),
-  totalUsers: z.number().int().nonnegative(),
-});
-
-export const AppUserListResponseSchema = z.object({
-  data: z.array(AppUserResponseSchema),
-  meta: MetaSchema,
-});
-
-export type AppUserResponse = z.infer<typeof AppUserResponseSchema>;
-export type AppUserListResponse = z.infer<typeof AppUserListResponseSchema>;
 export type AppUserCreateBody = z.infer<typeof AppUserCreateBodySchema>;
 export type AppUserUpdateBody = z.infer<typeof AppUserUpdateBodySchema>;
 export type AppUserSortBy = z.infer<typeof AppUserSortBySchema>;
-export type AppUserQuery = z.infer<typeof AppUserQuerySchema>;
+export type AppUserListQuery = z.infer<typeof AppUserListQuerySchema>;
 export type AppUserDeleteManyBody = z.infer<typeof AppUserDeleteManyBodySchema>;

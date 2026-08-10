@@ -1,4 +1,4 @@
-import { RecordQuerySchema } from "@parking-access/schemas";
+import { RecordListQuerySchema } from "@parking-access/schemas";
 import type { Request, Response } from "express";
 
 import { Prisma, prisma } from "@/database";
@@ -10,7 +10,7 @@ export async function getRecords(req: Request, res: Response) {
     sortBy = "time",
     sortOrder = "desc",
     search,
-  } = RecordQuerySchema.parse(req.query);
+  } = RecordListQuerySchema.parse(req.query);
 
   const isAll = pageSize === 0;
 

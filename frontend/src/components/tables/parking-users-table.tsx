@@ -8,13 +8,13 @@ import {
   Table,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import type { ParkingUserResponse } from "@parking-access/schemas";
 
 import PageSizeSelect from "@/components/tables/page-size-select";
 import StatusIndicator from "@/components/tables/status-indicator";
 import TablePagination from "@/components/tables/table-pagination/table-pagination";
 import TableStateMessage from "@/components/tables/table-state-message";
 import { useQueryString } from "@/hooks/use-query-string";
+import type { ParkingUserResponse } from "@/schemas/parking-user-schema";
 
 type ParkingUsersTableProps = {
   users: ParkingUserResponse[];

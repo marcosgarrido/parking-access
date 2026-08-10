@@ -1,25 +1,22 @@
 import type { Id } from "@parking-access/schemas";
 import {
   type ParkingUserCreateBody,
+  type ParkingUserDeleteManyBody,
+  type ParkingUserListQuery,
+  type ParkingUserUpdateBody,
+} from "@parking-access/schemas";
+import { queryOptions } from "@tanstack/react-query";
+
+import {
   type ParkingUserListResponse,
   ParkingUserListResponseSchema,
   type ParkingUserResponse,
   ParkingUserResponseSchema,
-  type ParkingUserSortBySchema,
-  type ParkingUserUpdateBody,
-} from "@parking-access/schemas";
-import { queryOptions } from "@tanstack/react-query";
-import type { z } from "zod";
+} from "@/schemas/parking-user-schema";
 
 import { apiFetch } from "./client";
 
-type Params = {
-  page: number;
-  pageSize: number;
-  sortBy: z.infer<typeof ParkingUserSortBySchema>;
-  sortOrder: "asc" | "desc";
-  search: string;
-};
+type Params = Required<ParkingUserListQuery>;
 
 export async function fetchParkingUsers(
   params: Params,
@@ -83,8 +80,10 @@ export async function deleteParkingUser(id: Id): Promise<void> {
 }
 
 export async function deleteParkingUsers(ids: Id[]): Promise<void> {
+  const body: ParkingUserDeleteManyBody = { ids };
+
   await apiFetch("/api/parking-users/delete-many", {
     method: "POST",
-    body: JSON.stringify({ ids }),
+    body: JSON.stringify(body),
   });
 }

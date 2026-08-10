@@ -9,7 +9,7 @@ import {
   TextField,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import type { LoginBody, LoginResponse } from "@parking-access/schemas";
+import type { LoginBody } from "@parking-access/schemas";
 import { LoginBodySchema } from "@parking-access/schemas";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchMe, login } from "@/api/auth";
 import { LogoIcon } from "@/components/logo-icon";
 import { useAuth } from "@/hooks/use-auth";
+import type { LoginResponse } from "@/schemas/auth-schema";
 
 export default function LoginPage() {
   const navigate = useNavigate();

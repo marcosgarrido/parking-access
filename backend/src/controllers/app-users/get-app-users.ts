@@ -1,4 +1,4 @@
-import { AppUserQuerySchema } from "@parking-access/schemas";
+import { AppUserListQuerySchema } from "@parking-access/schemas";
 import type { Request, Response } from "express";
 
 import { Prisma, prisma } from "@/database";
@@ -10,7 +10,7 @@ export async function getAppUsers(req: Request, res: Response) {
     sortBy = "username",
     sortOrder = "asc",
     search,
-  } = AppUserQuerySchema.parse(req.query);
+  } = AppUserListQuerySchema.parse(req.query);
 
   const where: Prisma.AppUserWhereInput | undefined =
     search && search.trim().length > 0

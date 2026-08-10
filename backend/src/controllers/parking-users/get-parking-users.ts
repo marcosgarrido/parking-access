@@ -1,4 +1,4 @@
-import { ParkingUserQuerySchema } from "@parking-access/schemas";
+import { ParkingUserListQuerySchema } from "@parking-access/schemas";
 import type { Request, Response } from "express";
 
 import { prisma } from "@/database";
@@ -10,7 +10,7 @@ export async function getParkingUsers(req: Request, res: Response) {
     sortBy = "createdAt",
     sortOrder = "desc",
     search,
-  } = ParkingUserQuerySchema.parse(req.query);
+  } = ParkingUserListQuerySchema.parse(req.query);
 
   const isAll = pageSize === 0;
 

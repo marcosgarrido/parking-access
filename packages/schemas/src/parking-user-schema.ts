@@ -1,11 +1,7 @@
 import { z } from "zod";
 
 import { IdSchema } from "./id-schema";
-import {
-  TimeshiftBaseSchema,
-  TimeshiftBodySchema,
-  TimeshiftResponseSchema,
-} from "./timeshift-schema";
+import { TimeshiftBaseSchema, TimeshiftBodySchema } from "./timeshift-schema";
 import { VehicleBaseSchema } from "./vehicle-schema";
 
 function capitalize(value: string): string {
@@ -46,7 +42,7 @@ const TelephoneSchema = z
     message: "Introduce un número español válido (9 dígitos, sin prefijo)",
   });
 
-const VehicleListSchema = z
+export const VehicleListSchema = z
   .array(VehicleBaseSchema)
   .superRefine((vehicles, ctx) => {
     const plates = vehicles.map((vehicle) => vehicle.plate);
@@ -156,7 +152,7 @@ export const ParkingUserSortBySchema = z.enum([
   "createdAt",
 ]);
 
-export const ParkingUserQuerySchema = z
+export const ParkingUserListQuerySchema = z
   .object({
     search: z.string(),
     page: z.coerce.number().min(1),
@@ -166,36 +162,10 @@ export const ParkingUserQuerySchema = z
   })
   .partial();
 
-export const ParkingUserResponseSchema = z.object({
-  id: IdSchema,
-  ...ParkingUserBaseSchema.shape,
-  createdAt: z.iso.datetime(),
-  updatedAt: z.iso.datetime(),
-  vehicles: VehicleListSchema.optional().default([]),
-  timeshifts: z.array(TimeshiftResponseSchema).optional().default([]),
-  lastAccess: z.iso.datetime().nullable().optional(),
-});
-
-const MetaSchema = z.object({
-  page: z.number().int().positive().optional(),
-  pageSize: z.number().int().positive().optional(),
-  totalPages: z.number().int().nonnegative().optional(),
-  totalUsers: z.number().int().nonnegative().optional(),
-});
-
-export const ParkingUserListResponseSchema = z.object({
-  data: z.array(ParkingUserResponseSchema),
-  meta: MetaSchema,
-});
-
 export type ParkingUserCreateBody = z.infer<typeof ParkingUserCreateBodySchema>;
 export type ParkingUserUpdateBody = z.infer<typeof ParkingUserUpdateBodySchema>;
-export type ParkingUserResponse = z.infer<typeof ParkingUserResponseSchema>;
 export type ParkingUserSortBy = z.infer<typeof ParkingUserSortBySchema>;
-export type ParkingUserListResponse = z.infer<
-  typeof ParkingUserListResponseSchema
->;
-export type ParkingUserQuery = z.infer<typeof ParkingUserQuerySchema>;
+export type ParkingUserListQuery = z.infer<typeof ParkingUserListQuerySchema>;
 export type ParkingUserDeleteManyBody = z.infer<
   typeof ParkingUserDeleteManyBodySchema
 >;

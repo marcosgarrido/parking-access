@@ -1,5 +1,4 @@
 import { RouterProvider, Toast, useTheme } from "@heroui/react";
-import type { AppUserSession } from "@parking-access/schemas";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import type { NavigateOptions } from "react-router-dom";
@@ -10,6 +9,7 @@ import { setUnauthorizedHandler } from "@/api/client";
 import { WS_EVENTS } from "@/constants/ws-events";
 import { AuthContext } from "@/hooks/use-auth";
 import { useSocketSubscribe } from "@/hooks/use-socket-subscribe";
+import type { AppUserSession } from "@/schemas/auth-schema";
 
 declare module "@react-types/shared" {
   interface RouterConfig {

@@ -1,6 +1,5 @@
 import type {
   ParkingUserCreateBody,
-  ParkingUserResponse,
   ParkingUserUpdateBody,
   TimeshiftBase,
 } from "@parking-access/schemas";
@@ -14,6 +13,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { createParkingUser, updateParkingUser } from "@/api/parking-users";
 import { useUnsavedChangesBlocker } from "@/hooks/use-unsaved-changes-blocker";
+import type { ParkingUserResponse } from "@/schemas/parking-user-schema";
 
 type FormValues = {
   name: string;

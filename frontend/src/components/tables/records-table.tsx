@@ -1,12 +1,12 @@
 import type { Selection, SortDescriptor } from "@heroui/react";
 import { Button, Checkbox, Chip, SearchField, Table } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import type { RecordResponse } from "@parking-access/schemas";
 
 import PageSizeSelect from "@/components/tables/page-size-select";
 import TablePagination from "@/components/tables/table-pagination/table-pagination";
 import TableStateMessage from "@/components/tables/table-state-message";
 import { useAuth } from "@/hooks/use-auth";
+import type { RecordResponse } from "@/schemas/record-schema";
 
 type RecordsTableProps = {
   records: RecordResponse[];

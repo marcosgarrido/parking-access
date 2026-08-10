@@ -9,7 +9,6 @@ import {
   Table,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import type { AppUserResponse } from "@parking-access/schemas";
 
 import PageSizeSelect from "@/components/tables/page-size-select";
 import StatusIndicator from "@/components/tables/status-indicator";
@@ -17,6 +16,7 @@ import TablePagination from "@/components/tables/table-pagination/table-paginati
 import TableStateMessage from "@/components/tables/table-state-message";
 import { ROLE_CHIP_CLASS, ROLE_LABELS } from "@/constants/roles";
 import { useQueryString } from "@/hooks/use-query-string";
+import type { AppUserResponse } from "@/schemas/app-user-schema";
 
 type AppUsersTableProps = {
   users: AppUserResponse[];

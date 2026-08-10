@@ -90,9 +90,4 @@ export const TimeshiftBodySchema = TimeshiftBaseSchema.superRefine(
   },
 );
 
-export const TimeshiftResponseSchema = TimeshiftBaseSchema.extend({
-  id: z.coerce.number().int().positive().optional(),
-});
-
-export type TimeshiftResponse = z.infer<typeof TimeshiftResponseSchema>;
 export type TimeshiftBase = z.infer<typeof TimeshiftBaseSchema>;

@@ -1,11 +1,11 @@
-import type { AccessTokenPayload } from "@parking-access/schemas";
 import type { RequestHandler } from "express";
 
 import { prisma } from "@/database";
 import { UnauthenticatedError } from "@/errors/app-error";
+import type { AccessTokenVerifiedPayload } from "@/schemas/access-token-schema";
 
 export const me: RequestHandler = async (_req, res) => {
-  const payload = res.locals.user as AccessTokenPayload | undefined;
+  const payload = res.locals.user as AccessTokenVerifiedPayload | undefined;
 
   if (!payload) {
     throw new UnauthenticatedError("No autenticado");

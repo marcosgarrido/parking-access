@@ -1,7 +1,4 @@
-import {
-  type LoginResponse,
-  LoginResponseSchema,
-} from "@parking-access/schemas";
+import { type LoginResponse, LoginResponseSchema } from "@/schemas/auth-schema";
 
 import { apiFetch } from "./client";
 
