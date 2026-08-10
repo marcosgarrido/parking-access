@@ -1,4 +1,4 @@
-import { RouterProvider, Toast } from "@heroui/react";
+import { RouterProvider, Toast, useTheme } from "@heroui/react";
 import type { AppUserSession } from "@parking-access/schemas";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
@@ -24,6 +24,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AppUserSession | null>(null);
   const [loading, setLoading] = useState(true);
   const userRef = useRef(user);
+
+  useTheme();
 
   useSocketSubscribe(WS_EVENTS.NEW_RECORD, () => {
     queryClient.invalidateQueries({ queryKey: ["records"] });
