@@ -16,6 +16,10 @@ import { initializeWebSocketServer } from "@/services/ws/ws-server";
 const app = express();
 const port = 4000;
 
+if (process.env.TRUSTED_PROXY_IP) {
+  app.set("trust proxy", process.env.TRUSTED_PROXY_IP);
+}
+
 app.use(express.json());
 app.use(cookieParser());
 
