@@ -19,6 +19,8 @@ logs/
 
 .DS_Store
 
+backend/src/database/seed-demo.ts
+
 .vscode/
 
 mosquitto/config/passwd
