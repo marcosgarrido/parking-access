@@ -62,7 +62,7 @@ export default function RecordsTable({
               <SearchField.SearchIcon />
               <SearchField.Input
                 className="w-56"
-                placeholder="Buscar por usuario"
+                placeholder="Buscar"
               />
               <SearchField.ClearButton />
             </SearchField.Group>

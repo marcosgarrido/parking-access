@@ -73,7 +73,7 @@ export default function AppUsersTable({
               <SearchField.SearchIcon />
               <SearchField.Input
                 className="w-56"
-                placeholder="Buscar por nombre completo"
+                placeholder="Buscar"
               />
               <SearchField.ClearButton />
             </SearchField.Group>

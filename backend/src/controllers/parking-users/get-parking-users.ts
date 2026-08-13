@@ -20,6 +20,7 @@ export async function getParkingUsers(req: Request, res: Response) {
           OR: [
             { name: { startsWith: search, mode: "insensitive" as const } },
             { surname: { startsWith: search, mode: "insensitive" as const } },
+            { telephone: { startsWith: search } },
           ],
         }
       : undefined;

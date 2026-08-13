@@ -24,6 +24,14 @@ export async function getRecords(req: Request, res: Response) {
             {
               parkingUserSurname: { startsWith: search, mode: "insensitive" },
             },
+            {
+              vehiclePlate: { startsWith: search, mode: "insensitive" },
+            },
+            {
+              parkingUser: {
+                telephone: { startsWith: search },
+              },
+            },
           ],
         }
       : undefined;

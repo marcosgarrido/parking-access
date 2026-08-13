@@ -18,6 +18,7 @@ export async function getAppUsers(req: Request, res: Response) {
           OR: [
             { name: { startsWith: search, mode: "insensitive" } },
             { surname: { startsWith: search, mode: "insensitive" } },
+            { username: { startsWith: search, mode: "insensitive" } },
           ],
         }
       : undefined;
