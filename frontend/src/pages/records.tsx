@@ -32,6 +32,8 @@ export default function RecordsPage() {
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set());
 
   useEffect(() => {
+    if (search === urlSearch) return;
+
     const id = setTimeout(() => setUrlSearch(search), 300);
 
     return () => clearTimeout(id);
