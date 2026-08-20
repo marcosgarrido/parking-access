@@ -17,7 +17,9 @@ export async function getCameraImage() {
     headers: { Authorization: authHeader },
     signal: AbortSignal.timeout(5000),
   });
-  const filename = (await snapshotNameResponse.text()).trim();
+  const filename = (await snapshotNameResponse.text())
+    .trim()
+    .replace(/^Snapshot\s+/, "");
   if (!filename) throw new Error("getsnapshot returned empty filename");
 
   const imageUrl = `${baseUrl}/get/${encodeURIComponent(filename)}`;
