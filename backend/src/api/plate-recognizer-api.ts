@@ -1,5 +1,3 @@
-import axios from "axios";
-
 type PlateRecognitionResponse = {
   results: { plate: string }[];
 };
@@ -11,18 +9,20 @@ export async function recognizePlate(plateImage: string) {
   const url = process.env.PLATERECOGNIZER_URL;
   if (!url) throw new Error("PLATERECOGNIZER_URL is not defined");
 
-  const response = await axios.post<PlateRecognitionResponse>(
-    url,
-    {
-      upload: plateImage,
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Token ${apiKey}`,
+      "Content-Type": "application/json",
     },
-    {
-      headers: {
-        Authorization: `Token ${apiKey}`,
-      },
-      timeout: 5000,
-    },
-  );
+    body: JSON.stringify({ upload: plateImage }),
+    signal: AbortSignal.timeout(5000),
+  });
 
-  return response.data.results.map((pair) => pair.plate.toUpperCase());
+  if (!response.ok) {
+    throw new Error(`Plate Recognizer request failed: ${response.status}`);
+  }
+
+  const data: PlateRecognitionResponse = await response.json();
+  return data.results.map((pair) => pair.plate.toUpperCase());
 }
