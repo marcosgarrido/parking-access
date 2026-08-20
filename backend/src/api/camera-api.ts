@@ -30,6 +30,7 @@ export async function getCameraImage() {
 
   while (true) {
     let imageResponse: Response;
+    let buffer: Buffer | undefined;
 
     try {
       imageResponse = await fetch(imageUrl, {
@@ -38,8 +39,7 @@ export async function getCameraImage() {
       });
 
       if (imageResponse.ok) {
-        const buffer = Buffer.from(await imageResponse.arrayBuffer());
-        return buffer.toString("base64");
+        buffer = Buffer.from(await imageResponse.arrayBuffer());
       }
     } catch {
       if (Date.now() - started >= maxWaitMs) {
@@ -49,12 +49,16 @@ export async function getCameraImage() {
       continue;
     }
 
-    if (imageResponse.status !== 404) {
+    if (buffer && buffer.length > 0) {
+      return buffer.toString("base64");
+    }
+
+    if (!imageResponse.ok && imageResponse.status !== 404) {
       throw new Error(`get/<file> failed: ${imageResponse.status}`);
     }
 
     if (Date.now() - started >= maxWaitMs) {
-      throw new Error(`get/<file> still 404 after ${maxWaitMs}ms`);
+      throw new Error(`get/<file> still empty or 404 after ${maxWaitMs}ms`);
     }
 
     await delay(stepMs);
